@@ -5,6 +5,7 @@
 #include <Preferences.h>
 #include "WiFiManager.h"
 #include "LEDManager.h"
+#include "WiFiProvManager.h"
 #include "time.h"
 
 
@@ -59,8 +60,9 @@ protected:
   void setupDateTime();
   char dateTime[37];
   
-  // A method purely to run code to test shit out
+  // A method purely to run one-time code (mainly for Preferences lib)
   void testMethod();
+
   
 public:
   

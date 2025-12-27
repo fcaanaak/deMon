@@ -4,7 +4,7 @@
 #include <WiFi.h>
 #include <Preferences.h>
 #include "LEDManager.h"
-
+#include "WiFiProvManager.h"
 
 enum State{
   CONNECTED,
@@ -18,6 +18,7 @@ class WiFiManager{
   static const unsigned short autoReconnectSeconds = 10;
 
   Preferences prefObject;
+  WiFiProvManager wifiProv;
 
   static bool connectToWiFi(const char* ssid, const char* password, unsigned int waitSecs);
   static bool reconnectToWiFi(unsigned int waitSecs);

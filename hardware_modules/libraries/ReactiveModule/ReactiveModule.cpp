@@ -14,10 +14,9 @@ void ReactiveModule::testMethod(){
   
   modulePrefs.begin(WIFI_DATABASE,READ_WRITE);
 
-  const char* ssid = "";
-  String password = String("");
+
   modulePrefs.clear();
-  modulePrefs.putString(ssid,password);
+
   modulePrefs.end();
   
 }

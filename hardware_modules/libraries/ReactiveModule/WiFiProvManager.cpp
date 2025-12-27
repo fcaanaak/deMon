@@ -1,4 +1,4 @@
-#include "WifiProvManager.h"
+#include "WiFiProvManager.h"
 
 // Setup methods
 
@@ -32,12 +32,17 @@ void WiFiProvManager::setupSuccessCallback(){
     prefObject.begin("wifiDatabase", false);
     prefObject.putString(ssid,password);
     prefObject.end();
+
+    ESP.restart();
+
   });
 
 }
 
 void WiFiProvManager::setupProvCallback(){
-  
+  provisioner.onProvision( [this]() {
+
+  });
 }
 
 void WiFiProvManager::setupCallbacks(){
@@ -48,13 +53,36 @@ void WiFiProvManager::setupCallbacks(){
 }
 
 
-void WiFiProvManager::activateProvisioning(){
-  provisioner.startProvisioning();
+void WiFiProvManager::setupProvButton(){
+  pinMode(provButtonPin,INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(provButtonPin),std::bind(&WiFiProvManager::activateProvisioningFlag,this), FALLING);
+
 }
 
 void WiFiProvManager::setup(){
 
+  provisionOnNextCheck = false;
+
+  setupProvConfig();
+  setupProvButton();
   setupCallbacks();
   
+}
+
+void WiFiProvManager::activateProvisioning(){
+  provisioner.startProvisioning();
+}
+
+void WiFiProvManager::activateProvisioningFlag(){
+  provisionOnNextCheck = true;
+}
+
+void WiFiProvManager::provisionIfFlagSet(){
+
+  if (provisionOnNextCheck) {
+    activateProvisioning();
+    provisionOnNextCheck = false;
+  }
+
 }
 

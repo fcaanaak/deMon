@@ -172,13 +172,9 @@ void WiFiManager::onWiFiReconnect(WiFiEvent_t event, WiFiEventInfo_t info){
 
 
 void WiFiManager::onWiFiDisconnect(WiFiEvent_t event, WiFiEventInfo_t info){
-
-
-  //  LEDManager::flashLEDBlocking(255,0,0,3,100);
   
   LEDManager::setLED(255,63,0);
 
-  // Try unregistering this function from the WiFidisconnect event after a bit
   if (!reconnectToWiFi(30)){
 
     ESP.restart();
@@ -190,7 +186,8 @@ void WiFiManager::onWiFiDisconnect(WiFiEvent_t event, WiFiEventInfo_t info){
 void WiFiManager::setup(){
   //  resetToSTA();
   registerWiFiEvents();
-
+  wifiProv.setup();
+  
 
   bool successfulAutoReconnect = autoReconnect();
   
@@ -199,7 +196,7 @@ void WiFiManager::setup(){
   }
   
   while (!successfulAutoReconnect){
-
+    wifiProv.provisionIfFlagSet();
     successfulAutoReconnect = autoReconnect();
     delay(10*1000);
     
