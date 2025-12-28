@@ -18,9 +18,9 @@ void WiFiProvManager::setupProvConfig(){
   config.FOOTER_TEXT= "New Modsec Device";
   config.RESET_CONFIRMATION_TEXT = "RESET?";
   config.CONNECTION_SUCCESSFUL = "CONNECTION SUCCESSFUL :)";
-  config.INPUT_TEXT = "New Modsec Device";
-  config.INPUT_LENGTH = 6;
-  config.SHOW_INPUT_FIELD = false;
+  config.INPUT_TEXT = "Enter server IP";
+  config.INPUT_LENGTH = 15;
+  config.SHOW_INPUT_FIELD = true;
   config.SHOW_RESET_FIELD = false;
   
 }
@@ -32,16 +32,32 @@ void WiFiProvManager::setupSuccessCallback(){
     prefObject.begin("wifiDatabase", false);
     prefObject.putString(ssid,password);
     prefObject.end();
-
+    
+    isProvisioning = false;
+    
     ESP.restart();
+  });
 
+}
+
+void WiFiProvManager::setupInputCheckCallback(){
+  
+  provisioner.onInputCheck( [this](const char* input) -> bool {
+
+    char* inputParam;
+    *inputParam = *input;
+
+    Serial.println(input);
+    matcher.Target(inputParam);
+    return matcher.Match(ipPattern) > 0;
+    
   });
 
 }
 
 void WiFiProvManager::setupProvCallback(){
   provisioner.onProvision( [this]() {
-
+    isProvisioning = true;
   });
 }
 
@@ -61,8 +77,6 @@ void WiFiProvManager::setupProvButton(){
 
 void WiFiProvManager::setup(){
 
-  provisionOnNextCheck = false;
-
   setupProvConfig();
   setupProvButton();
   setupCallbacks();
@@ -80,9 +94,14 @@ void WiFiProvManager::activateProvisioningFlag(){
 void WiFiProvManager::provisionIfFlagSet(){
 
   if (provisionOnNextCheck) {
-    activateProvisioning();
     provisionOnNextCheck = false;
+    activateProvisioning();
   }
 
+}
+
+bool WiFiProvManager::checkIfProvisioning(){
+
+  return isProvisioning;
 }
 

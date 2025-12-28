@@ -172,12 +172,15 @@ void WiFiManager::onWiFiReconnect(WiFiEvent_t event, WiFiEventInfo_t info){
 
 
 void WiFiManager::onWiFiDisconnect(WiFiEvent_t event, WiFiEventInfo_t info){
+
+  if (!WiFiProvManager::checkIfProvisioning()){
+    LEDManager::setLED(255,63,0);
   
-  LEDManager::setLED(255,63,0);
+    if (!reconnectToWiFi(10)){
 
-  if (!reconnectToWiFi(30)){
+      ESP.restart();
+    }
 
-    ESP.restart();
   }
   
 }

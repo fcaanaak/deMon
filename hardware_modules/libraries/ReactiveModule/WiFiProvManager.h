@@ -4,6 +4,7 @@
 #include <WiFiProvisioner.h>
 #include <Preferences.h>
 #include "FunctionalInterrupt.h"
+#include <Regexp.h>
 
 class WiFiProvManager{
 
@@ -13,7 +14,11 @@ class WiFiProvManager{
   WiFiProvisioner provisioner;
   Preferences prefObject;
   const unsigned int provButtonPin = 0;
-  bool provisionOnNextCheck;
+  static inline bool isProvisioning = false;
+  bool provisionOnNextCheck = false;
+
+  MatchState matcher;
+  const char* ipPattern = "([0-9]{3}.){3}([0-9]{3})";
   
   // Methods
 
@@ -28,6 +33,7 @@ class WiFiProvManager{
   void setupCallbacks();
   void setupProvCallback();
   void setupSuccessCallback();
+  void setupInputCheckCallback();
 
   void activateProvisioningFlag();
   
@@ -36,7 +42,8 @@ class WiFiProvManager{
  public:
 
   void setup();
-
+  
+  static bool checkIfProvisioning();
   void provisionIfFlagSet();
  
 };
