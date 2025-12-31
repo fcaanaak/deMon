@@ -18,7 +18,7 @@ void WiFiProvManager::setupProvConfig(){
   config.FOOTER_TEXT= "New Modsec Device";
   config.RESET_CONFIRMATION_TEXT = "RESET?";
   config.CONNECTION_SUCCESSFUL = "CONNECTION SUCCESSFUL :)";
-  config.INPUT_TEXT = "Enter server IP";
+  config.INPUT_TEXT = "Server IP";
   config.INPUT_LENGTH = 15;
   config.SHOW_INPUT_FIELD = true;
   config.SHOW_RESET_FIELD = false;
@@ -29,9 +29,9 @@ void WiFiProvManager::setupProvConfig(){
 void WiFiProvManager::setupSuccessCallback(){
 
   provisioner.onSuccess( [this](const char* ssid, const char* password, const char* input) {
-    prefObject.begin("wifiDatabase", false);
-    prefObject.putString(ssid,password);
-    prefObject.end();
+
+    pref.addWiFiNetwork(ssid,password);
+    pref.addServerIP(input);
     
     isProvisioning = false;
     
@@ -47,7 +47,6 @@ void WiFiProvManager::setupInputCheckCallback(){
     char* inputParam;
     *inputParam = *input;
 
-    Serial.println(input);
     matcher.Target(inputParam);
     return matcher.Match(ipPattern) > 0;
     

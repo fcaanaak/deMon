@@ -2,7 +2,7 @@
 #define WIFI_PROV_MANAGER_H
 
 #include <WiFiProvisioner.h>
-#include <Preferences.h>
+#include "PrefManager.h"
 #include "FunctionalInterrupt.h"
 #include <Regexp.h>
 
@@ -12,13 +12,13 @@ class WiFiProvManager{
 
   // Fields
   WiFiProvisioner provisioner;
-  Preferences prefObject;
+  PrefManager pref;
   const unsigned int provButtonPin = 0;
   static inline bool isProvisioning = false;
   bool provisionOnNextCheck = false;
 
   MatchState matcher;
-  const char* ipPattern = "([0-9]{3}.){3}([0-9]{3})";
+  const char* ipPattern = "([0-9]{1,3}.){3}([0-9]{1,3})";
   
   // Methods
 

@@ -668,7 +668,7 @@ static constexpr const char index_html13[] PROGMEM =
               if (!code_listener.value) {
                 return `${input_name_text} is required`;
               }
-              if (code_listener.value.length !== input_lenght) {
+              if (code_listener.value.length > input_lenght) {
                 return `${input_name_text} should be ${input_lenght} characters long`;
               }
               return null;

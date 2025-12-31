@@ -80,7 +80,6 @@ bool WiFiManager::reconnectToWiFi(unsigned int waitSecs){
 
 String WiFiManager::scanStoredNetworks(){
 
-  //  prefObject.begin(WIFI_DATABASE,READ);
   prefObject.begin(WIFI_DATABASE,READ);
   
   int availableNetworks = WiFi.scanNetworks();
@@ -90,12 +89,8 @@ String WiFiManager::scanStoredNetworks(){
     for (int currentNetwork = 0;(currentNetwork < availableNetworks);currentNetwork++){
       
       String ssid = WiFi.SSID(currentNetwork);
-      //Serial.println(ssid);// Remove this later
       
-      if (prefObject.getString(ssid.c_str(),"fail") != "fail"){	
-
-	Serial.print("Found SSID: ");
-	Serial.println(ssid);
+      if (prefObject.getString(ssid.c_str(),"") != ""){	
 
 	WiFi.scanDelete();
 	prefObject.end();
@@ -204,10 +199,5 @@ void WiFiManager::setup(){
     delay(10*1000);
     
   }
-  
-}
-
-WiFiManager::WiFiManager(Preferences passedPrefObj){
-  
   
 }

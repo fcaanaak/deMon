@@ -41,8 +41,6 @@ class WiFiManager{
 
 public:
   
-  WiFiManager(Preferences prefObject);
-  
   void setup();
   
 };

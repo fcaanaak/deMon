@@ -20,10 +20,9 @@ class ReactiveModule{
 protected:
 
   /* Class fields */
-  Preferences modulePrefs;
   
   /**Wi-Fi related fields **/
-  WiFiManager wifi = WiFiManager(modulePrefs);  
+  WiFiManager wifi;
   
   enum State{
     NETWORK_RECOVERY,
@@ -59,9 +58,6 @@ protected:
   void getDateTime();
   void setupDateTime();
   char dateTime[37];
-  
-  // A method purely to run one-time code (mainly for Preferences lib)
-  void testMethod();
 
   
 public:

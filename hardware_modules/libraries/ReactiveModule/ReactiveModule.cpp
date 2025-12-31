@@ -1,26 +1,11 @@
-
-#include "Arduino.h"
 #include "ReactiveModule.h"
 
-#define WIFI_DATABASE "wifiDatabase"
 #define READ true
 #define READ_WRITE false
 #define DEFAULT_CONNECTION_CHECK_TIME 5000
 #define MILLIS_TO_SECONDS 1000
 
 #define DATE_STRING_LENGTH 37
-
-void ReactiveModule::testMethod(){
-  
-  modulePrefs.begin(WIFI_DATABASE,READ_WRITE);
-
-
-  modulePrefs.clear();
-
-  modulePrefs.end();
-  
-}
-
 
 void ReactiveModule::getDateTime(){
 
