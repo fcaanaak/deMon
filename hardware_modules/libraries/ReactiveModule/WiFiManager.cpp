@@ -1,7 +1,4 @@
 #include "WiFiManager.h"
-#define WIFI_DATABASE "wifiDatabase"
-#define READ true
-#define READ_WRITE false
 
 
 void WiFiManager::resetToSTA(){
@@ -76,11 +73,12 @@ bool WiFiManager::reconnectToWiFi(unsigned int waitSecs){
   WiFi.reconnect();
 
   return waitForConnection(waitSecs);
+  
 }
 
 String WiFiManager::scanStoredNetworks(){
 
-  prefObject.begin(WIFI_DATABASE,READ);
+  pref.beginWiFiDatabase(PrefManager::readWriteMode);
   
   int availableNetworks = WiFi.scanNetworks();
 
@@ -90,17 +88,17 @@ String WiFiManager::scanStoredNetworks(){
       
       String ssid = WiFi.SSID(currentNetwork);
       
-      if (prefObject.getString(ssid.c_str(),"") != ""){	
+      if (pref.getString(ssid.c_str(),"") != ""){	
 
 	WiFi.scanDelete();
-	prefObject.end();
+	pref.end();
         return ssid;
       }
      
     }
   }
   
-  prefObject.end();
+  pref.end();
   return String();
 
 }
@@ -117,12 +115,12 @@ bool WiFiManager::autoReconnect(){
  
   if (storedSSID != ""){
 
-    prefObject.begin(WIFI_DATABASE,READ);
+    pref.beginWiFiDatabase(PrefManager::readMode);
     
-    String password = prefObject.getString(storedSSID.c_str());
+    String password = pref.getString(storedSSID.c_str());
     const char* password_cstring = password.c_str();
 
-    prefObject.end();
+    pref.end();
 
     bool connectionSuccessful = connectToWiFi(storedSSID.c_str(),password_cstring,10);
 

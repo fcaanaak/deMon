@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.modsecapp.R
-import com.example.modsecapp.pages.report.ReportEntry
+import com.example.modsecapp.Constants
 
 class ReportAdapter( var reportList: List<ReportEntry>) :
     RecyclerView.Adapter<ReportAdapter.MyViewHolder>() {
@@ -17,11 +17,13 @@ class ReportAdapter( var reportList: List<ReportEntry>) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val ReportEntry = reportList[position]
+        val reportEntry = reportList[position]
 
-        holder.entryDeviceName.text = ReportEntry.reportingDevice
-        holder.entryDate.text = ReportEntry.displayDate
-        holder.entryTime.text = ReportEntry.displayTime
+        holder.entryDeviceName.text = reportEntry.deviceName
+
+        // Change the below lines back later
+        holder.entryDate.text = "Date: ${reportEntry.year}-${Constants.MONTH_STRINGS[reportEntry.month-1]}-${reportEntry.day}"
+        holder.entryTime.text = "Time: ${reportEntry.hour}:${reportEntry.minute}:${reportEntry.second}"
 
     }
 

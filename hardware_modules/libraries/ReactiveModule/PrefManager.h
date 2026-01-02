@@ -4,7 +4,9 @@
 #include <Preferences.h>
 
 class PrefManager{
-
+  /**
+   * A modsec specific wrapper around Preferences
+   */
 
  private:
 
@@ -15,18 +17,24 @@ class PrefManager{
 
   static constexpr const char* serverIPKey = "serverIP";
   
-  static const bool readWriteMode = false;
-  static const bool readMode = true;
-
 
   void addString(const char* nameSpace, const char* key, const char* value);
   
  public:
 
+  static const bool readWriteMode = false;
+  static const bool readMode = true;
 
   void addServerIP(const char* serverIP);
   void addWiFiNetwork(const char* ssid, const char* password);
 
+  void beginWiFiDatabase(bool mode);
+  void beginSystemDatabase(bool mode);
+  
+  String getString(const char* key, String failValue=String());
+  String getServerIP();
+  
+  void end();
   
 };
 

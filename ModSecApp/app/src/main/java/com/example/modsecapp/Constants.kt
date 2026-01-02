@@ -28,6 +28,13 @@ class Constants {
         const val FILTER_YEAR_MIN:Int = 1900
         const val FILTER_YEAR_MAX:Int = 2100
 
+        // Date utility constants
+
+        val MONTH_STRINGS: List<String> = listOf(
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        )
+
 
 
     }

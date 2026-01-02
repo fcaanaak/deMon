@@ -3,18 +3,19 @@ package serverWrapper.concreteHandlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import serverWrapper.CoreConstants;
 import serverWrapper.abstractHandlers.GetHandler;
-import serverWrapper.abstractHandlers.PutHandler;
+import serverWrapper.abstractHandlers.PostHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ReportHandler extends BaseHandler implements HttpHandler, GetHandler, PutHandler {
+public class ReportHandler extends BaseHandler implements HttpHandler, GetHandler, PostHandler {
 
-    List<String> latestReports = Collections.synchronizedList(new ArrayList<>());
+    List<JSONObject> latestReports = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -22,7 +23,7 @@ public class ReportHandler extends BaseHandler implements HttpHandler, GetHandle
         switch (exchange.getRequestMethod()){
 
             case CoreConstants.REQUEST_GET -> handleGet(exchange);
-            case CoreConstants.REQUEST_PUT -> handlePut(exchange);
+            case CoreConstants.REQUEST_POST -> handlePost(exchange);
 
             default -> handleMethodNotAllowed(exchange);
         }
@@ -39,11 +40,11 @@ public class ReportHandler extends BaseHandler implements HttpHandler, GetHandle
     }
 
     @Override
-    public void handlePut(HttpExchange exchange) throws IOException {
+    public void handlePost(HttpExchange exchange) throws IOException {
 
         String requestBodyString = getRequestBody(exchange);
 
-        latestReports.add(requestBodyString);
+        latestReports.add(new JSONObject(requestBodyString));
 
         sendResponse(exchange, requestBodyString + "\n",CoreConstants.RESPONSE_OK);
 

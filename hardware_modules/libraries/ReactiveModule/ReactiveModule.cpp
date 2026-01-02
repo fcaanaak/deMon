@@ -7,32 +7,6 @@
 
 #define DATE_STRING_LENGTH 37
 
-void ReactiveModule::getDateTime(){
-
-  struct tm timeinfo;
-
-  if (!getLocalTime(&timeinfo)){
-    strlcpy(dateTime,"FAILURE",DATE_STRING_LENGTH);
-  } else{
-    
-    strftime(dateTime,DATE_STRING_LENGTH,"%A %B %d %Y %H:%M:%S",&timeinfo);
-
-  }  
-
-}
-
-
-void ReactiveModule::setupDateTime(){
-
-  const char* ntpServer = "pool.ntp.org";
-  const long gmOffset_sec = -8*3600;
-  const int daylightOffset_sec = 3600;
-  
-  configTime(gmOffset_sec,daylightOffset_sec,ntpServer);
-  
-
-}
-
 
 void ReactiveModule::setThreshold(float newThreshold){
   
@@ -49,8 +23,9 @@ void ReactiveModule::setIntervalMillis(unsigned long newInterval){
 void ReactiveModule::setup(){
 
   LEDManager::setupLED();
+  httpClient.setup();
   wifi.setup();
-  setupDateTime();
+  dateTime.setup();
   
 }
 
@@ -72,6 +47,27 @@ bool ReactiveModule::checkTimer(unsigned long detectTimeMillis){
   
 }
 
+String ReactiveModule::generateJSONReport(char* name){
+
+  char output[256];
+
+  JsonDocument doc;
+
+  doc["deviceName"] = name;
+  
+  doc["year"] = dateTime.getYear();
+  doc["month"] = dateTime.getMonth();
+  doc["day"] = dateTime.getDay();
+  doc["hour"] = dateTime.getHour();
+  doc["minute"] = dateTime.getMinute();
+  doc["second"] = dateTime.getSecond();
+
+
+  serializeJson(doc,output);
+
+  return String(output);
+}
+
 void ReactiveModule::mainloop(){
   
 
@@ -80,7 +76,15 @@ void ReactiveModule::mainloop(){
     if (detectExternalEvent()){
       
       LEDManager::setLED(0,0,255);
-      getDateTime();
+      
+      dateTime.loadDateTime();
+      
+      String report = generateJSONReport("name");
+      
+      httpClient.startReportsConnection();
+      httpClient.sendPost(report);
+      httpClient.endConnection();
+      
       inactivityCounter = 0;
       
     } else {

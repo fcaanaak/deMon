@@ -2,7 +2,7 @@
 #define WIFI_MANAGER_H
 
 #include <WiFi.h>
-#include <Preferences.h>
+#include "PrefManager.h"
 #include "LEDManager.h"
 #include "WiFiProvManager.h"
 
@@ -17,7 +17,7 @@ class WiFiManager{
 
   static const unsigned short autoReconnectSeconds = 10;
 
-  Preferences prefObject;
+  PrefManager pref;
   WiFiProvManager wifiProv;
 
   static bool connectToWiFi(const char* ssid, const char* password, unsigned int waitSecs);

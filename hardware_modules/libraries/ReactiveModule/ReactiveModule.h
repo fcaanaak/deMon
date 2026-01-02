@@ -2,12 +2,12 @@
 #define REACTIVE_MODULE_H
 
 #include "Arduino.h"
-#include <Preferences.h>
 #include "WiFiManager.h"
 #include "LEDManager.h"
 #include "WiFiProvManager.h"
-#include "time.h"
-
+#include "DateTimeManager.h"
+#include <ArduinoJson.h>
+#include "HttpClientManager.h"
 
 #define HOUR_LENGTH 3
 #define MINUTE_LENGTH 3
@@ -23,6 +23,7 @@ protected:
   
   /**Wi-Fi related fields **/
   WiFiManager wifi;
+  HttpClientManager httpClient;
   
   enum State{
     NETWORK_RECOVERY,
@@ -51,13 +52,10 @@ protected:
   virtual bool detectExternalEvent() = 0;
   float threshold;
   
-  void generateJSONReport();
+  String generateJSONReport(char* name);
   void sendReport();
 
-  // Date time retrieval methods
-  void getDateTime();
-  void setupDateTime();
-  char dateTime[37];
+  DateTimeManager dateTime;
 
   
 public:

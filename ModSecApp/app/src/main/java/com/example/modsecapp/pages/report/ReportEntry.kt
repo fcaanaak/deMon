@@ -1,20 +1,13 @@
 package com.example.modsecapp.pages.report
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.time.LocalDateTime
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
 
-data class ReportEntry(var reportingDevice:String, var dateTimeObject: LocalDateTime){
-
-
-    val year = dateTimeObject.year
-    val month = dateTimeObject.month.value
-    val day = dateTimeObject.dayOfMonth
-    val hour = dateTimeObject.hour
-    val minute = dateTimeObject.minute
-
-    val displayDate = "Date: ${dateTimeObject.toLocalDate()}"
-    val displayTime = "Time: ${dateTimeObject.toLocalTime()}"
+data class ReportEntry(val deviceName:String, val year:Int, val month:Int, val day:Int,
+    val hour:Int, val minute:Int, val second: Int): Serializable{
+    val displayDate = "Date: $year-$month-$day"
+    val displayTime = "Time: $hour:$minute:$second"
 
 }

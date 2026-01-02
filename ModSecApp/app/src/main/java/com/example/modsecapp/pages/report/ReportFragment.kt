@@ -3,6 +3,7 @@ package com.example.modsecapp.pages.report
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -50,6 +51,8 @@ class ReportFragment : Fragment() {
 
     private lateinit var reportFilter: ReportFilter
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -92,7 +95,6 @@ class ReportFragment : Fragment() {
      */
     private fun getFilteredReportEntries(): MutableList<ReportEntry>{
 
-
         return originalEntries.filter{
 
             mutableMapOf(
@@ -104,7 +106,7 @@ class ReportFragment : Fragment() {
             ).filter{(k, _)->
                 k.active
             }.all{
-                    (k,v) -> k.data == v
+                (k,v) -> k.data == v
             }
 
         }.toMutableList()
@@ -262,31 +264,12 @@ class ReportFragment : Fragment() {
      */
     private fun generateTestDataList(): MutableList<ReportEntry>{
 
-        return mutableListOf(
-            ReportEntry("123456789012345678901234567890", LocalDateTime.of(
-                2005, 11, 23, 11, 59,12
-            )),
+        val bundle = arguments
+        val templist = arrayListOf<ReportEntry>()
+        val reports = bundle!!.getSerializable("reports", templist::class.java)
 
-            ReportEntry("123456789012345678901234567890", LocalDateTime.of(
-                2006, 11, 23, 11, 59,12
-            )),
+        return reports!!.reversed().toMutableList()
 
-            ReportEntry("123456789012345678901234567890", LocalDateTime.of(
-                2005, 12, 23, 22, 59,12
-            )),
-
-            ReportEntry("123456789012345678901234567890", LocalDateTime.of(
-                2005, 12, 24, 22, 59,12
-            )),
-
-            ReportEntry("123456789012345678901234567890", LocalDateTime.of(
-                2005, 12, 24, 23, 59,12
-            )),
-
-            ReportEntry("123456789012345678901234567890", LocalDateTime.of(
-                2005, 12, 24, 23, 11,12
-            )),
-            )
     }
 
 }
