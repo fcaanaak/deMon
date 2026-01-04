@@ -1,14 +1,10 @@
-package com.example.modsecapp
+package com.example.modsecapp.httpclient
 
-import android.content.Context
 import com.example.modsecapp.pages.report.ReportEntry
-
 import retrofit2.Call
 import retrofit2.http.GET
 
-
-interface HttpClient {
-
+interface HttpRequestManager {
     @GET("reports")
     fun getReports(): Call<ArrayList<ReportEntry>>
 }

@@ -32,7 +32,7 @@ public class ReportHandler extends BaseHandler implements HttpHandler, GetHandle
     @Override
     public void handleGet(HttpExchange exchange) throws IOException {
 
-        JSONArray jsonReports = new JSONArray(latestReports);
+        JSONArray jsonReports = new JSONArray(latestReports.reversed());
         latestReports.clear();
 
         sendResponse(exchange, jsonReports + "\n",CoreConstants.RESPONSE_OK);
@@ -44,7 +44,9 @@ public class ReportHandler extends BaseHandler implements HttpHandler, GetHandle
 
         String requestBodyString = getRequestBody(exchange);
 
+
         latestReports.add(new JSONObject(requestBodyString));
+
 
         sendResponse(exchange, requestBodyString + "\n",CoreConstants.RESPONSE_OK);
 

@@ -35,6 +35,9 @@ class Constants {
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         )
 
+        // General time constants
+        val SECONDS_TO_MILLIS:Int = 1000;
+
 
 
     }

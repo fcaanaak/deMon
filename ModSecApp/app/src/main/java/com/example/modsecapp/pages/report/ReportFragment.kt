@@ -3,7 +3,6 @@ package com.example.modsecapp.pages.report
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.modsecapp.R
+import com.example.modsecapp.httpclient.HttpClient
 
 import java.util.Calendar
 import com.example.modsecapp.pages.report.filter.ReportFilter
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import java.time.LocalDateTime
 
 /**
  * A simple [androidx.fragment.app.Fragment] subclass.
@@ -44,7 +43,6 @@ class ReportFragment : Fragment() {
     // Entry arrays
 
     private lateinit var originalEntries: MutableList<ReportEntry>
-    private lateinit var dynamicEntries: MutableList<ReportEntry>
 
 
     // Filter Object
@@ -85,8 +83,13 @@ class ReportFragment : Fragment() {
         setupDateFilter(view,dateFilterButton)
         setupTimeFilter(view,timeFilterButton)
 
+
+        updateReportEntries(ReportFetcher(context!!).getStoredReports())
+
+
         return view
     }
+
 
 
     /**
@@ -249,26 +252,20 @@ class ReportFragment : Fragment() {
         // Ignore the warning here, we are passing in a view created earlier
         reportRecyclerView = view!!.findViewById(R.id.recyclerView)
 
-        originalEntries = generateTestDataList()
-        dynamicEntries = originalEntries.toMutableList()
+        originalEntries = mutableListOf()
 
         reportRecyclerView.layoutManager = LinearLayoutManager(this@ReportFragment.context)
 
-        reportEntryAdapter = ReportAdapter(dynamicEntries)
+        reportEntryAdapter = ReportAdapter(originalEntries)
         reportRecyclerView.adapter = reportEntryAdapter
 
     }
 
-    /**
-     * Method to generate sample data array for Reports (remove later)
-     */
-    private fun generateTestDataList(): MutableList<ReportEntry>{
 
-        val bundle = arguments
-        val templist = arrayListOf<ReportEntry>()
-        val reports = bundle!!.getSerializable("reports", templist::class.java)
+    private fun updateReportEntries(reportsList: ArrayList<ReportEntry>){
 
-        return reports!!.reversed().toMutableList()
+        originalEntries = reportsList.toMutableList()
+        reportEntryAdapter.updateList(originalEntries)
 
     }
 

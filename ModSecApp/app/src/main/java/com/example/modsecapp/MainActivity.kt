@@ -1,20 +1,34 @@
 package com.example.modsecapp
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.fragment.app.Fragment
+import com.example.modsecapp.httpclient.HttpClient
+import com.example.modsecapp.httpclient.HttpRequestManager
 import com.example.modsecapp.pages.dashboard.DashboardFragment
 import com.example.modsecapp.pages.devices.DevicesFragment
 import com.example.modsecapp.pages.report.ReportFragment
 import com.example.modsecapp.pages.report.ReportEntry
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.modsecapp.pages.report.ReportsBroadcastReceiver
+import java.util.Calendar
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,56 +44,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val retrofit = Retrofit.Builder().apply {
-            baseUrl("http://10.0.0.114:8000/")
-            addConverterFactory(GsonConverterFactory.create())
-        }.build()
+        createNotificationChannel()
 
-        val httpClient = retrofit.create(HttpClient::class.java)
+        if (!checkNotificationPermissions()){
+            requestNotificationPermissions()
+        }
 
-        val call = httpClient.getReports()
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
+        // Create an intent to trigger the alarm
+        val intent = Intent(this@MainActivity, ReportsBroadcastReceiver::class.java)
 
-        call.enqueue(object : Callback<ArrayList<ReportEntry>>{
-
-            override fun onResponse(
-                call: Call<ArrayList<ReportEntry>>,
-                response: Response<ArrayList<ReportEntry>>
-            ) {
-
-                if (response.isSuccessful){
+        // Create a PendingIntent that will be triggered when the alarm goes off
+        val pendingIntent = PendingIntent.getBroadcast(this@MainActivity, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
-                    if (response.body() != null) {
-                        reports = response.body()!!
-                        for (report in reports){
-                            Log.d("DEBUG",report.toString())
-                            var content = ""
-                            content += "name: ${report.deviceName}\n"
-                            content += "year: ${report.year}\n"
-                            content += "month: ${report.month}\n"
-                            content += "day: ${report.day}\n"
-                            content += "hour: ${report.hour}\n"
-                            content += "minute: ${report.minute}\n"
-                            content += "second: ${report.second}\n"
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis() + (10*1000),
+            pendingIntent
 
-                            Log.d("DEBUG",content)
-                        }
-                    }
+        )
 
-                }
-            }
-
-            override fun onFailure(
-                call: Call<ArrayList<ReportEntry>?>,
-                t: Throwable
-            ) {
-                Log.e("HTTP ERROR",t.toString())
-                Toast.makeText(this@MainActivity,"Error: ${t.toString()}",Toast.LENGTH_LONG).show()
-            }
-
-
-        })
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
@@ -111,6 +97,64 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.flFragment,fragment)
             commit()
         }
+    }
+
+    private fun createNotificationChannel() {
+
+        val channelId = "i.apps.notifications"
+        val description = "HELLO"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                description,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                enableLights(true) // Turn on notification light
+                lightColor = Color.GREEN
+                enableVibration(true) // Allow vibration for notifications
+            }
+
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
+    private fun checkNotificationPermissions(): Boolean{
+
+        return (ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun requestNotificationPermissions(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                101
+            )
+        }
+    }
+
+    private fun sendNotification(){
+
+        val channelId = "i.apps.notifications"
+
+        val builder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.checkmark) // Notification icon
+            .setContentTitle("Hello") // Title displayed in the notification
+            .setContentText("Welcome to GeeksforGeeks!!") // Text displayed in the notification
+            .setAutoCancel(true) // Dismiss notification when tapped
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // Notification priority for better visibility
+
+        // Display the notification
+        with(NotificationManagerCompat.from(this)) {
+            notify(1234, builder.build())
+        }
+
     }
 
 

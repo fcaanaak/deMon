@@ -6,6 +6,10 @@
     <string name="report_title">Report</string>
     <string name="devices_title">Devices</string>
 
+
+    <!-- Error text for when we can't connect to the server -->
+    <string name="server_connection_error_text">Failed to connect to server: %1$s</string>
+
     <!-- ***Placeholder text*** -->
 
     <!-- Placeholder text for app pages -->
