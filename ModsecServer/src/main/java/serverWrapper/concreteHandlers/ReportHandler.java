@@ -16,7 +16,6 @@ import java.util.List;
 public class ReportHandler extends BaseHandler implements HttpHandler, GetHandler, PostHandler {
 
     List<JSONObject> latestReports = Collections.synchronizedList(new ArrayList<>());
-
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -42,11 +41,15 @@ public class ReportHandler extends BaseHandler implements HttpHandler, GetHandle
     @Override
     public void handlePost(HttpExchange exchange) throws IOException {
 
+        String requestHeaderString = exchange.getRequestHeaders().getFirst("Content-Type");
+
+        if (!CoreConstants.HEADER_JSON.equals(requestHeaderString)){
+            sendResponse(exchange, "Request must indicate JSON content",CoreConstants.RESPONSE_BAD_REQUEST);
+        }
+
         String requestBodyString = getRequestBody(exchange);
 
-
         latestReports.add(new JSONObject(requestBodyString));
-
 
         sendResponse(exchange, requestBodyString + "\n",CoreConstants.RESPONSE_OK);
 

@@ -15,9 +15,8 @@ public class ServerWrapper {
     private HttpServer server;
 
     private void createContexts(){
-
-        server.createContext(CoreConstants.PATH_ROOT, new RootHandler());
         server.createContext(CoreConstants.PATH_REPORTS, new ReportHandler());
+
     }
 
     private void startServer(){
@@ -25,17 +24,19 @@ public class ServerWrapper {
         server.start();
     }
 
+
     public ServerWrapper(){
 
         try {
             // Create an HttpServer instance
-            server = HttpServer.create(new InetSocketAddress(8000), 0);
+            server = HttpServer.create(new InetSocketAddress(CoreConstants.PORT), 0);
 
             createContexts();
 
             startServer();
 
-            System.out.println("Server is running on port 8000");
+            System.out.println("Server is running on port 3000");
+
         } catch (IOException e) {
             System.out.println("Error starting the server: " + e.getMessage());
         }

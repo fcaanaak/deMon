@@ -16,6 +16,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20251224")
+
+    // Source: https://mvnrepository.com/artifact/jakarta.websocket/jakarta.websocket-api
+    compileOnly("jakarta.websocket:jakarta.websocket-api:2.3.0-M2")
+
 }
 
 tasks.test {

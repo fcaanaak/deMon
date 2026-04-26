@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var reportFragment: ReportFragment
     private lateinit var devicesFragment: DevicesFragment
 
-    private var reports = arrayListOf<ReportEntry>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             requestNotificationPermissions()
         }
 
+	// Will need to remove the bottom lines as we transition to firebase cloud messaging instead of polling
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
         // Create an intent to trigger the alarm
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         )
 
-
+	// Stop removing stuff here
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
         dashboardFragment = DashboardFragment()

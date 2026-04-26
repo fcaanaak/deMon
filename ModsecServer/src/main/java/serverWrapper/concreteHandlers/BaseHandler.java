@@ -15,7 +15,7 @@ public class BaseHandler {
 
         String response = "Method " + exchange.getRequestMethod() + " is not supported for this URI\n";
 
-        exchange.sendResponseHeaders(CoreConstants.RESPONSE_METHOD_NOT_ALLOWED,response.length());
+        exchange.sendResponseHeaders(CoreConstants.RESPONSE_METHOD_NOT_ALLOWED, response.length());
 
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
