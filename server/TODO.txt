@@ -1,0 +1,12 @@
+TODO:
+(FUTURE STUFF: For filtering by time, just filter by time intervals)
+
+1. Add a model for the reports called Report that contains a string field for the deviceName and the detectionDate
+Make sure that you use the @Entity annotation and give the model a primary key (DONE)
+
+2. Add a repository to deal with the Reports and hook it up to the ReportServiceImpl class
+
+3. Set up an H2 Database and figure out a schema for it
+
+4. Write some basic code in the ReportService to add a single report to the Database
+

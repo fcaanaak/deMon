@@ -1,9 +1,11 @@
 package com.modesec.server.models;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 
 @Entity
 public class Report {
@@ -13,13 +15,19 @@ public class Report {
     private Long id;
 
     private String deviceName;
-    private LocalDateTime detectionDateTime;
+
+    public Report(String deviceName){
+        this.deviceName = deviceName;
+    }
+
+
+//    private LocalDateTime detectionDateTime;
 
     public String getDeviceName() {
         return deviceName;
     }
 
-    public LocalDateTime getDetectionDateTime() {
-        return detectionDateTime;
-    }
+//    public LocalDateTime getDetectionDateTime() {
+//        return detectionDateTime;
+//    }
 }
