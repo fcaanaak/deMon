@@ -1,5 +1,6 @@
 package com.modesec.server.controllers;
 
+import com.modesec.server.controllers.constants.CoreConstants;
 import com.modesec.server.services.DeviceHealthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 public class DeviceHealthController {
@@ -21,7 +23,7 @@ public class DeviceHealthController {
      *
      * @return a list of downed device or an empty list if no devices are down
      */
-    @GetMapping("/device-health")
+    @GetMapping(CoreConstants.DEVICE_HEALTH_ENDPOINT)
     public List<Long> getInactiveDevices() {
 
         return new ArrayList<>();// Placeholder
