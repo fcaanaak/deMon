@@ -18,9 +18,31 @@ public class Device {
 
     private Boolean isOnline;
 
-    public Device(String name, Boolean isOnline) {
+    private Boolean isArmed;
+
+    public Device(String name, Boolean isOnline, Boolean isArmed) {
         this.name = name;
         this.isOnline = isOnline;
+        this.isArmed = isArmed;
     }
 
+    public Boolean getArmed() {
+        return isArmed;
+    }
+
+    public void setArmed(Boolean armed) {
+        isArmed = armed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Boolean getOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(Boolean online) {
+        isOnline = online;
+    }
 }

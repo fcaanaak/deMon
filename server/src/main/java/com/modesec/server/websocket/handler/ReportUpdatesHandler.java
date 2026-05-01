@@ -1,7 +1,6 @@
 package com.modesec.server.websocket.handler;
 
-import com.modesec.server.models.ArmRequest;
-import com.modesec.server.repositories.DeviceRepository;
+import com.modesec.server.models.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -14,18 +13,19 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Websocket handler used to update clients whenever device reports come in
+ *
+ * When a report comes in, all active clients will receive a notification about the report that just came in
+ *
+ */
+
 @Component
-public class DeviceMessagingHandler extends TextWebSocketHandler {
+public class ReportUpdatesHandler extends TextWebSocketHandler {
 
-    public final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    private DeviceRepository deviceRepository;
-
-    private void bootstrapConnection(WebSocketSession session) {
-
-    }
+    private final Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -37,7 +37,7 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
         String payload = message.getPayload();
 
         session.sendMessage(
-                new TextMessage("Echo (from devices):" + payload)
+                new TextMessage("Echo (Reports):" + payload)
         );
     }
 
@@ -46,14 +46,14 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
         sessions.remove(session);
     }
 
-    public void broadcastArmingToggle(ArmRequest armRequest) throws IOException {
+    public void broadcastReportToClients(Report report) throws IOException {
 
-        for (WebSocketSession session: sessions) {
-            session.sendMessage(
-                    new TextMessage(objectMapper.writeValueAsString(armRequest))
+        for (WebSocketSession client: sessions) {
+            client.sendMessage(
+                    new TextMessage(objectMapper.writeValueAsString(report))
             );
         }
-    }
 
+    }
 
 }
