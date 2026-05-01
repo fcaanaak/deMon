@@ -20,8 +20,8 @@ class VirtualModule:
         self.name = f"VModule_{VirtualModule.count}"
         VirtualModule.count += 1
         
-        self.server_url = "ws://206.12.176.252:9080/"
-        self.reports_url = self.server_url + "echo"
+        self.server_url = "ws://10.0.0.114:8080/"
+        self.reports_url = self.server_url + "ws-reports"
                 
         self.interval_secs = 0.5
         self.detection_chance = 10
@@ -36,8 +36,8 @@ class VirtualModule:
 
     def generate_report(self):
         curr_datetime = datetime.now()
-        
-        return {
+
+        report_data = {
             "name": self.name,
             "date": {
                 "year": curr_datetime.year,
@@ -48,6 +48,12 @@ class VirtualModule:
                 "second": curr_datetime.second
             }
         }
+
+        test_data = {
+            "deviceName" : self.name
+        }
+
+        return test_data
 
     def main_loop(self):
         

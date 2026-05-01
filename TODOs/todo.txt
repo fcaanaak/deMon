@@ -1,0 +1,42 @@
+Things to do:
+
+(ARMING)
+When client sends a PUT request to the /arm-toggle endpoint:
+     Then a broadcast should be sent to all the connected devices
+     containing a JSON message notifying them to turn on or off.
+     After this, all device entries in the database should be updated
+     to have isArmed reflect the value that was passed in
+
+(REPORTS)
+When a device sends a POST request to the /reports endpoint:
+     Then the report should first be stored in the database.
+     After this, the server should broadcast a message to connected clients
+     which will manifest itself as a desktop notification on the client-side.
+
+(DEVICE HEALTH)
+When a device first connects to the server:
+     Then it should send a bundle of data including its name and UUID.
+     After this, a wrapper containing the session and the aforementioned
+     data will be tracked in a set and used to identify the device later on.
+
+When a device goes offline:
+     Then the devices entry in the sessions set should be searched for and using
+     its UUID, the corresponding database table entry should have its isOnline
+     field set to false. The sessions set should also be locally updated first
+
+When the user makes a GET request to the /device-health endpoint:
+     Then the sessions set or some other kind of set should be queried for offline
+     devices. For all offline devices, the user should be notified and the UI should
+     be updated appropriately.
+
+
+Actionable steps:
+
+	   1. Complete all steps for ARMING
+	   2. Complete all steps for REPORTS
+	   3. Add support for dates in REPORTS and see how that can integrate with the H2 Database
+	   
+	   4. Update the C++ firmware for the devices to match the new server structure
+
+	   5. Complete all SERVER related steps for DEVICE HEALTH
+	   6. Update the firmware for the devices so they can properly connect to the server and be tracked
