@@ -1,2 +1,5 @@
 /virtual_modules/venv/
 /virtual_modules/virtualenv/
+*~
+#*#
+.#*
