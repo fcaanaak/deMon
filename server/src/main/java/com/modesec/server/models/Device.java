@@ -20,6 +20,8 @@ public class Device {
 
     private Boolean isArmed;
 
+    public Device(){}
+
     public Device(String name, Boolean isOnline, Boolean isArmed) {
         this.name = name;
         this.isOnline = isOnline;

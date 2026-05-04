@@ -16,6 +16,8 @@ public class Report {
 
     private String deviceName;
 
+    public Report(){}
+
     public Report(String deviceName){
         this.deviceName = deviceName;
     }
