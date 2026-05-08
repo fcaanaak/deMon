@@ -4,17 +4,26 @@ import com.modesec.server.controllers.constants.CoreConstants;
 import com.modesec.server.models.Report;
 import com.modesec.server.services.ReportServiceImpl;
 import com.modesec.server.websocket.handler.ReportUpdatesHandler;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 
-
+/**
+ * REST Controller meant to be used by devices and NOT clients
+ * to upload reports
+ */
 @RestController
 public class ReportController {
+
+
+    private Logger logger = LoggerFactory.getLogger(ReportController.class);
 
     @Autowired
     ReportServiceImpl reportService;
@@ -38,15 +47,11 @@ public class ReportController {
      * @return a response containing the report just sent
      */
     @PostMapping(CoreConstants.REPORTS_ENDPOINT)
-    public Report postReports(@RequestBody Report report) {
+    public Report postReports(@Valid @RequestBody Report report) {
+
+        logger.info(String.valueOf(report.getDetectionDateTime()));
 
         reportService.addReport(report);
-
-        try {
-            reportUpdatesHandler.broadcastReportToClients(report);
-        } catch (IOException e) {
-            // Should put something here later
-        }
 
         return report;
     }
