@@ -91,8 +91,8 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
 
     public void broadcastArmingToggle(ArmRequest armRequest) throws IOException {
 
-        for (WebSocketSession session: pendingSessions) {
-            session.sendMessage(
+        for (DeviceSessionContainer devSesh: deviceSessions.values()) {
+            devSesh.session().sendMessage(
                     new TextMessage(objectMapper.writeValueAsString(armRequest))
             );
         }
