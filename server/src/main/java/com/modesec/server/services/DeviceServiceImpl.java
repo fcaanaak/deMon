@@ -54,7 +54,16 @@ public class DeviceServiceImpl implements DeviceService {
         } catch (IOException e) {
             // Do nothing for now but should probably log when this happens or display something on client side
         }
+    }
+
+    @Override
+    public void updateOnlineStatus(String deviceName) {
+        // Will start by doing find by name
+        Device foundDevice = deviceRepository.findByName(deviceName);
+        foundDevice.setOnline(Boolean.FALSE);
+        deviceRepository.save(foundDevice);
 
     }
+
 
 }

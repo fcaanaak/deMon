@@ -28,9 +28,6 @@ public class ReportController {
     @Autowired
     ReportServiceImpl reportService;
 
-    @Autowired
-    ReportUpdatesHandler reportUpdatesHandler;
-
     @GetMapping(CoreConstants.REPORTS_ENDPOINT)// Temp, delete later
     public String getReports() {
         return "<h1>HELLO WORLD</h1>";
@@ -48,8 +45,6 @@ public class ReportController {
      */
     @PostMapping(CoreConstants.REPORTS_ENDPOINT)
     public Report postReports(@Valid @RequestBody Report report) {
-
-        logger.info(String.valueOf(report.getDetectionDateTime()));
 
         reportService.addReport(report);
 

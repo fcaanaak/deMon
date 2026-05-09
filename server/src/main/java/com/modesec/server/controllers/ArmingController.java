@@ -22,9 +22,6 @@ public class ArmingController {
     Logger logger = LoggerFactory.getLogger(ArmingController.class);
 
     @Autowired
-    private DeviceMessagingHandler deviceMessagingHandler;
-
-    @Autowired
     private DeviceService deviceService;
 
     @PutMapping(CoreConstants.ARMING_ENDPOINT)
