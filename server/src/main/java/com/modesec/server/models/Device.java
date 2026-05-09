@@ -11,7 +11,6 @@ import java.util.UUID;
 public class Device {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;// Primary key for DB
 
     private String name;
@@ -22,10 +21,11 @@ public class Device {
 
     public Device(){}
 
-    public Device(String name, Boolean isOnline, Boolean isArmed) {
+    public Device(String name, UUID id, Boolean isOnline, Boolean isArmed) {
         this.name = name;
         this.isOnline = isOnline;
         this.isArmed = isArmed;
+        this.id = id;
     }
 
     public Boolean getArmed() {
@@ -46,5 +46,9 @@ public class Device {
 
     public void setOnline(Boolean online) {
         isOnline = online;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }

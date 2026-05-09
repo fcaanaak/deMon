@@ -29,8 +29,6 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    final Logger logger = LoggerFactory.getLogger(DeviceMessagingHandler.class);
-
     @Autowired
     private DeviceRepository deviceRepository;
 
@@ -49,13 +47,14 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
             deviceSessions.putIfAbsent(session.getId(), new DeviceSessionContainer(initializedDevice, session));
         }
 
-
     }
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         pendingSessions.add(session);
     }
+
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -73,12 +72,14 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
         );
     }
 
+
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 
-        Device foundDevice = deviceSessions.getOrDefault(session.getId(), null).device();
+        DeviceSessionContainer foundContainer = deviceSessions.getOrDefault(session.getId(), null);
 
-        if (foundDevice != null) {
+        if (foundContainer != null) {
+            Device foundDevice = foundContainer.device();
             foundDevice.setOnline(false);
             deviceRepository.save(foundDevice);
         }
@@ -86,6 +87,7 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
         deviceSessions.remove(session.getId());
         pendingSessions.remove(session);// Just in case
     }
+
 
     public void broadcastArmingToggle(ArmRequest armRequest) throws IOException {
 
