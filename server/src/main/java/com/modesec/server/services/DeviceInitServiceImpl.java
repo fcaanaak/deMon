@@ -3,36 +3,48 @@ package com.modesec.server.services;
 import com.modesec.server.models.Device;
 import com.modesec.server.models.DeviceMessage;
 import com.modesec.server.repositories.DeviceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class DeviceInitServiceImpl implements DeviceInitService{
 
+    Logger logger = LoggerFactory.getLogger(DeviceInitServiceImpl.class);
+
     @Autowired
     DeviceRepository deviceRepository;
 
-    private Boolean isDeviceInDB(String name) { // Use the device name for now, later will need to use UUID
-        return deviceRepository.existsByName(name);
+    private Boolean isDeviceInDB(UUID uuid) { // Use the device name for now, later will need to use uuid
+        return deviceRepository.existsById(uuid);
     }
 
-    private Device getDeviceFromDB(String name) {// Also uses name, change later
-        return deviceRepository.findByName(name);
+    private Optional<Device> getDeviceFromDB(UUID uuid) {// Also uses name, change later
+        return deviceRepository.findById(uuid);
     }
 
-    private Device getAndMarkDeviceAsOnline(String name) {
-        Device foundDevice = getDeviceFromDB(name);
-        foundDevice.setOnline(Boolean.TRUE);
-        deviceRepository.save(foundDevice);
+    private Device getAndMarkDeviceAsOnline(UUID uuid) {
+
+        Device foundDevice = getDeviceFromDB(uuid).orElse(null);
+
+        if (foundDevice != null) {
+            foundDevice.setOnline(Boolean.TRUE);
+            deviceRepository.save(foundDevice);
+        }
 
         return foundDevice;
     }
 
-    private Device createNewDevice(String name) {
+    private Device createNewDevice(DeviceMessage deviceMessage) {
         return new Device(
-          name,
-          Boolean.TRUE,
-          Boolean.FALSE
+                deviceMessage.name(),
+                UUID.fromString(deviceMessage.UUID()),
+                Boolean.TRUE,
+                Boolean.FALSE
         );
     }
 
@@ -45,13 +57,16 @@ public class DeviceInitServiceImpl implements DeviceInitService{
     @Override
     public Device deviceInit(DeviceMessage deviceMessage) {
 
-        String deviceName = deviceMessage.name();
+        UUID deviceId = UUID.fromString(deviceMessage.UUID());
 
-        if (isDeviceInDB(deviceName)) {
-            return getAndMarkDeviceAsOnline(deviceName);
+
+        Device searchedDevice = getAndMarkDeviceAsOnline(deviceId);
+
+        if (isDeviceInDB(deviceId)) {
+            return getAndMarkDeviceAsOnline(deviceId);
         }
 
-        Device newDevice = createNewDevice(deviceName);
+        Device newDevice = createNewDevice(deviceMessage);
         deviceRepository.save(newDevice);
 
         return newDevice;
