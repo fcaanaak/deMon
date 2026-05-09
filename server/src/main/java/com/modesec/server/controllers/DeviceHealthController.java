@@ -14,7 +14,7 @@ import java.util.List;
 public class DeviceHealthController {
 
     @Autowired
-    DeviceServiceImpl deviceHealthService;
+    DeviceServiceImpl deviceService;
 
     /**
      * Get all the devices that are currently down
@@ -24,7 +24,7 @@ public class DeviceHealthController {
     @GetMapping(CoreConstants.DEVICE_HEALTH_ENDPOINT)
     public List<Device> getInactiveDevices() {
 
-        return deviceHealthService.checkDevices();
+        return deviceService.checkDevices();
 
     }
 }
