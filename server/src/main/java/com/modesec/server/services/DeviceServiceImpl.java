@@ -56,14 +56,4 @@ public class DeviceServiceImpl implements DeviceService {
         }
     }
 
-    @Override
-    public void updateOnlineStatus(String deviceName) {
-        // Will start by doing find by name
-        Device foundDevice = deviceRepository.findByName(deviceName);
-        foundDevice.setOnline(Boolean.FALSE);
-        deviceRepository.save(foundDevice);
-
-    }
-
-
 }

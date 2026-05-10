@@ -11,6 +11,4 @@ public interface DeviceService {
 
     void setArmed(ArmRequest armRequest);
 
-    void updateOnlineStatus(String deviceName);
-
 }

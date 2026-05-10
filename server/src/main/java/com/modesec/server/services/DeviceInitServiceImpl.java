@@ -3,8 +3,7 @@ package com.modesec.server.services;
 import com.modesec.server.models.Device;
 import com.modesec.server.models.DeviceMessage;
 import com.modesec.server.repositories.DeviceRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,22 +13,16 @@ import java.util.UUID;
 @Component
 public class DeviceInitServiceImpl implements DeviceInitService{
 
-    Logger logger = LoggerFactory.getLogger(DeviceInitServiceImpl.class);
-
     @Autowired
     DeviceRepository deviceRepository;
 
-    private Boolean isDeviceInDB(UUID uuid) { // Use the device name for now, later will need to use uuid
-        return deviceRepository.existsById(uuid);
-    }
-
-    private Optional<Device> getDeviceFromDB(UUID uuid) {// Also uses name, change later
-        return deviceRepository.findById(uuid);
+    private Device getDeviceFromDB(UUID uuid) {
+        return deviceRepository.findById(uuid).orElse(null);
     }
 
     private Device getAndMarkDeviceAsOnline(UUID uuid) {
 
-        Device foundDevice = getDeviceFromDB(uuid).orElse(null);
+        Device foundDevice = getDeviceFromDB(uuid);
 
         if (foundDevice != null) {
             foundDevice.setOnline(Boolean.TRUE);
@@ -59,13 +52,13 @@ public class DeviceInitServiceImpl implements DeviceInitService{
 
         UUID deviceId = UUID.fromString(deviceMessage.UUID());
 
-
         Device searchedDevice = getAndMarkDeviceAsOnline(deviceId);
 
-        if (isDeviceInDB(deviceId)) {
-            return getAndMarkDeviceAsOnline(deviceId);
+        if (searchedDevice != null) {
+            return searchedDevice;
         }
 
+        // Device not in DB
         Device newDevice = createNewDevice(deviceMessage);
         deviceRepository.save(newDevice);
 
