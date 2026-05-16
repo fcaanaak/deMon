@@ -10,6 +10,11 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 
+/**
+ * Configure all web socket handlers (classes that deal with websocket opertions)
+ * Main handlers of note are the DeviceMessageHandler that deals with server-device communications
+ * as well as the ReportUpdatesHandler that deals with client-server websocket communications
+ */
 @Configuration
 @EnableWebSocket
 public class WsConfig implements WebSocketConfigurer {

@@ -16,8 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Websocket handler used to update clients whenever device reports come in
  *
- * When a report comes in, all active clients will receive a notification about the report that just came in
- *
  */
 
 @Component

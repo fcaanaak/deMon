@@ -29,6 +29,12 @@ public class DeviceServiceImpl implements DeviceService {
         deviceRepository.saveAll(devices);
     }
 
+    /**
+     * Notify all connected devices of the incoming arming request
+     *
+     * @param armRequest the request to either arm or disarm all devices
+     * @throws IOException
+     */
     private void notifyDevices(ArmRequest armRequest) throws IOException {
         deviceMessagingHandler.broadcastArmingToggle(armRequest);
     }
@@ -42,6 +48,11 @@ public class DeviceServiceImpl implements DeviceService {
         return deviceRepository.findByIsOnline(Boolean.FALSE);
     }
 
+    /**
+     * Arm all devices, whether they be online or offline
+     *
+     * @param armRequest the arming request to fulfill
+     */
     @Override
     public void setArmed(ArmRequest armRequest) {
 

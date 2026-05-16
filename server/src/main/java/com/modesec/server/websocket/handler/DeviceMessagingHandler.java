@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Handler dedicated to dealing with device related websocket operations
+ */
 @Component
 public class DeviceMessagingHandler extends TextWebSocketHandler {
 
@@ -74,9 +77,9 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
 
 
     /**
-     * Set a device to be offline and
+     * Set a device to be offline and save its status in the Database
      *
-     * @param device
+     * @param device the device to set offline
      */
     private void setDeviceOffline(Device device) {
         device.setOnline(false);
@@ -127,7 +130,11 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
         handleDeviceDisconnect(session);
     }
 
-
+    /**
+     * Broadcast a request to arm the security system to all connected devices
+     *
+     * @param armRequest the passed in arming request to be broadcast
+     */
     public void broadcastArmingToggle(ArmRequest armRequest) {
 
         for (DeviceSessionContainer devSesh: deviceSessions.values()) {
