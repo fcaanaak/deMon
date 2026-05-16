@@ -19,6 +19,11 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private ReportUpdatesHandler reportUpdatesHandler;
 
+    /**
+     * Send a report to all clients
+     *
+     * @param report the report to broadcast
+     */
     private void broadcastReport(Report report) {
         try {
             reportUpdatesHandler.broadcastReportToClients(report);
@@ -27,11 +32,15 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    /**
+     * Save a passed in report to the DB and broadcast it to all connected clients
+     *
+     * @param report The report to add
+     */
     @Override
     public void addReport(Report report) {
         reportRepository.save(report);
         broadcastReport(report);
-
     }
 
 }

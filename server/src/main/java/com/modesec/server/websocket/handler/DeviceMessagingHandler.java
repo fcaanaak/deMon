@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Handler dedicated to dealing with device related websocket operations
+ */
 @Component
 public class DeviceMessagingHandler extends TextWebSocketHandler {
 
@@ -35,20 +38,69 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
     @Autowired
     private DeviceInitService deviceInitService;
 
+    /**
+     * Check if a device message indicates a device needs to be initialized
+     *
+     * @param deviceMessage The message to check
+     * @return True if the device needs to be initialized and false otherwise
+     */
     private Boolean checkForInit(DeviceMessage deviceMessage) {
         return deviceMessage.isInit();
     }
 
+    /**
+     * Initialize a device on the server side
+     *
+     * @param session The websocket session for the device
+     * @param deviceMessage The message sent by the device that triggered init
+     */
     private void deviceInit(WebSocketSession session, DeviceMessage deviceMessage) {
 
         if (pendingSessions.contains(session)) {
             pendingSessions.remove(session);
+
             Device initializedDevice = deviceInitService.deviceInit(deviceMessage);
             deviceSessions.putIfAbsent(session.getId(), new DeviceSessionContainer(initializedDevice, session));
         }
-
+        // Do nothing in the event that an already registered device sends an init message
     }
 
+    /**
+     * Remove the device-session container so its no longer tracked and remove the session from pending if it was
+     *
+     * @param session The websocket session for this device
+     */
+    private void removeDeviceAndSession(WebSocketSession session) {
+        deviceSessions.remove(session.getId());
+        pendingSessions.remove(session);
+    }
+
+
+    /**
+     * Set a device to be offline and save its status in the Database
+     *
+     * @param device the device to set offline
+     */
+    private void setDeviceOffline(Device device) {
+        device.setOnline(false);
+        deviceRepository.save(device);
+    }
+
+    /**
+     * Deal with the event that a device unexpectedly (or expectedly) goes offline
+     *
+     * @param session The websocket session for the device
+     */
+    private void handleDeviceDisconnect(WebSocketSession session) {
+
+        DeviceSessionContainer foundContainer = deviceSessions.getOrDefault(session.getId(), null);
+
+        if (foundContainer != null) {
+            setDeviceOffline(foundContainer.device());
+        }
+
+        removeDeviceAndSession(session);
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -74,27 +126,30 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
 
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
-        DeviceSessionContainer foundContainer = deviceSessions.getOrDefault(session.getId(), null);
-
-        if (foundContainer != null) {
-            Device foundDevice = foundContainer.device();
-            foundDevice.setOnline(false);
-            deviceRepository.save(foundDevice);
-        }
-
-        deviceSessions.remove(session.getId());
-        pendingSessions.remove(session);// Just in case
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        handleDeviceDisconnect(session);
     }
 
-
-    public void broadcastArmingToggle(ArmRequest armRequest) throws IOException {
+    /**
+     * Broadcast a request to arm the security system to all connected devices
+     *
+     * @param armRequest the passed in arming request to be broadcast
+     */
+    public void broadcastArmingToggle(ArmRequest armRequest) {
 
         for (DeviceSessionContainer devSesh: deviceSessions.values()) {
-            devSesh.session().sendMessage(
-                    new TextMessage(objectMapper.writeValueAsString(armRequest))
-            );
+            try {
+                devSesh.session().sendMessage(new TextMessage(objectMapper.writeValueAsString(armRequest)));
+            } catch (IOException e) {
+
+                try {
+                    devSesh.session().close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex); // Might want to display something on the client-side here
+                }
+
+            }
+
         }
     }
 
