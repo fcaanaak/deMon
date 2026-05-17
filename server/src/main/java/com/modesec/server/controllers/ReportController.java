@@ -7,10 +7,8 @@ import com.modesec.server.services.ReportServiceImpl;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * REST Controller meant to be used by devices and NOT clients
@@ -26,7 +24,7 @@ public class ReportController {
      * GET Mapping for reports endpoint
      * will send back either all the reports or some of the reports, with options to get more
      *
-     * @return Placeholder for now, but later either some or all of reports
+     * @return Placeholder for now, but later either some or all of reportsq
      */
     @GetMapping(CoreConstants.REPORTS_ENDPOINT)// Temp, update later to
     public String getReports() {
@@ -43,6 +41,7 @@ public class ReportController {
      * @return a response containing the report just sent
      */
     @PostMapping(CoreConstants.REPORTS_ENDPOINT)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public Report postReports(@Valid @RequestBody Report report) {
         reportService.addReport(report);
         return report;
