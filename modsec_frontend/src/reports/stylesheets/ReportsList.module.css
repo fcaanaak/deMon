@@ -1,0 +1,8 @@
+.reportsList {
+    list-style-type: none;
+    overflow-y: scroll;
+    width: 100%;
+    margin:auto;
+    padding: 10px;
+}
+

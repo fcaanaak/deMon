@@ -1,0 +1,19 @@
+.reportsFilter {
+    display: block;
+    position: sticky;
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: lightgray;
+    border: 2px solid black;
+
+    top: 105px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.reportsFilterInput {
+    width: 80%;
+    height: 30px;
+}
