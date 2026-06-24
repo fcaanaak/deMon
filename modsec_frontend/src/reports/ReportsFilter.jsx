@@ -22,7 +22,7 @@ function ReportsFilter({reportsList, filterUpdateCallback}) {
                 setIsFiltering(true);
             }
 
-            filterUpdateCallback(backupReport.filter(report => report.name.startsWith(filterVal)));
+            filterUpdateCallback(backupReport.filter(report => report.deviceName.startsWith(filterVal)));
         }
 
 

@@ -9,6 +9,8 @@ public final class CoreConstants {
     public static final String DEVICE_HEALTH_ENDPOINT = ROOT_ENDPOINT + "device-health";
     public static final String ARMING_ENDPOINT = ROOT_ENDPOINT + "arm-toggle";
 
+    public static final String FRONTEND_URL = "http://localhost:5173";
+
     private CoreConstants(){}
 
 }

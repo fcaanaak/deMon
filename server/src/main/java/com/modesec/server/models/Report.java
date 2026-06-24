@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 
 @Entity
-public class Report {
+public class Report implements Comparable<Report>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +38,10 @@ public class Report {
         return deviceName;
     }
     public LocalDateTime getDetectionDateTime() {return detectionDateTime;}
+
+    @Override
+    public int compareTo(Report report) {
+        return getDetectionDateTime().compareTo(report.getDetectionDateTime());
+    }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.modesec.server.websocket.handler.ReportUpdatesHandler;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -41,6 +42,11 @@ public class ReportServiceImpl implements ReportService {
     public void addReport(Report report) {
         reportRepository.save(report);
         broadcastReport(report);
+    }
+
+    @Override
+    public List<Report> getReports() {
+        return reportRepository.findAll();
     }
 
 }
