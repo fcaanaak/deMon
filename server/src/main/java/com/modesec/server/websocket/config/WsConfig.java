@@ -1,5 +1,6 @@
 package com.modesec.server.websocket.config;
 
+import com.modesec.server.controllers.constants.CoreConstants;
 import com.modesec.server.websocket.handler.DeviceMessagingHandler;
 import com.modesec.server.websocket.handler.ReportUpdatesHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,11 @@ public class WsConfig implements WebSocketConfigurer {
         registry.addHandler(deviceMessagingHandler, "/ws")
                 .setAllowedOrigins("http://localhost:8080/");
 
+
         registry.addHandler(reportUpdatesHandler, "/ws-reports")
-                .setAllowedOrigins("http://localhost:8080/");
+                .setAllowedOrigins(
+                        "http://localhost:8080/",
+                        CoreConstants.FRONTEND_URL
+                );
     }
 }

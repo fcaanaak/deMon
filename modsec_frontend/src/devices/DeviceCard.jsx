@@ -5,8 +5,6 @@ function DeviceCard({name, isOnline}) {
 
     const statusImg = isOnline ? coreConstants.CHECK_MARK_IMG_PATH : coreConstants.CROSS_MARK_IMG_PATH;
 
-    console.log(name, isOnline);
-
     return (
         <div className={styles.deviceCard}>
             <img src = {statusImg} alt={"Device Online"}/>

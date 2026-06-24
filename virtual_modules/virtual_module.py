@@ -7,7 +7,7 @@ import requests
 from uuid import uuid4
 from websockets.sync.client import connect
 
-DEVICE_COUNT = 5
+DEVICE_COUNT = 4
 
 
 class VirtualModule:
@@ -57,7 +57,7 @@ class VirtualModule:
             json = json_content
         )
         
-        assert response.status_code == 200
+        assert response.status_code == 201
 
     def gen_init(self):
         return json.dumps({"UUID":self.uuid, "isInit":True, "name":self.name})

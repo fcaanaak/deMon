@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * REST Controller meant to be used by devices and NOT clients
  * to upload reports
@@ -22,13 +26,17 @@ public class ReportController {
 
     /**
      * GET Mapping for reports endpoint
-     * will send back either all the reports or some of the reports, with options to get more
      *
-     * @return Placeholder for now, but later either some or all of reportsq
+     * @return All the reports in the database sorted in chronological order
      */
-    @GetMapping(CoreConstants.REPORTS_ENDPOINT)// Temp, update later to
-    public String getReports() {
-        return "<h1>HELLO WORLD</h1>";
+    @GetMapping(CoreConstants.REPORTS_ENDPOINT)
+    @CrossOrigin(origins = CoreConstants.FRONTEND_URL)
+    public List<Report> getReports() {
+
+        List<Report> reportsList = reportService.getReports();
+        reportsList.sort(Collections.reverseOrder());
+        return reportsList;
+
     }
 
     /**
@@ -48,3 +56,4 @@ public class ReportController {
     }
 
 }
+
