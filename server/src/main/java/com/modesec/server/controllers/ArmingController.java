@@ -5,6 +5,7 @@ import com.modesec.server.models.ArmRequest;
 import com.modesec.server.services.DeviceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ public class ArmingController {
      *
      */
     @PutMapping(CoreConstants.ARMING_ENDPOINT)
+    @CrossOrigin(origins = CoreConstants.FRONTEND_URL)
     public ArmRequest toggleArming(@RequestBody ArmRequest armRequest) {
 
         deviceService.setArmed(armRequest);
