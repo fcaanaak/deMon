@@ -10,7 +10,8 @@ import java.util.List;
  */
 public interface DeviceService {
 
-    List<Device> checkDevices();
+    List<Device> getDevices();
+    Integer getNumberOfDownedDevices();
 
     void setArmed(ArmRequest armRequest);
 

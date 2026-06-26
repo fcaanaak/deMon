@@ -40,14 +40,16 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     /**
-     * Retrieve all inactive devices
+     * Retrieve all devices
      * @return a list of all device that are currently inactive
      */
     @Override
-    public List<Device> checkDevices() {
-        return deviceRepository.findByIsOnline(Boolean.FALSE);
+    public List<Device> getDevices() {
+        return deviceRepository.findAll();
     }
 
+    @Override
+    public Integer getNumberOfDownedDevices() {return deviceRepository.findByIsOnline(Boolean.FALSE).size();}
     /**
      * Arm all devices, whether they be online or offline
      *

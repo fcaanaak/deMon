@@ -7,6 +7,8 @@ class coreConstants {
     static NEW_REPORTS_URL = coreConstants.SERVER_WS_URL + "ws-reports";
     static ALL_REPORTS_URL = coreConstants.SERVER_URL + "reports";
     static ARMING_URL = coreConstants.SERVER_URL + "arm-toggle";
+    static DEVICES_URL = coreConstants.SERVER_URL + "devices";
+    static DOWNED_DEVICES_URL = coreConstants.SERVER_URL + "downed-devices";
 
 }
 

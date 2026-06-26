@@ -4,6 +4,7 @@ import com.modesec.server.controllers.constants.CoreConstants;
 import com.modesec.server.models.Device;
 import com.modesec.server.services.DeviceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,12 +21,23 @@ public class DeviceHealthController {
     DeviceServiceImpl deviceService;
 
     /**
-     * Get all the devices that are currently offline
+     * Get all devices
      *
-     * @return a list of downed device or an empty list if no devices are down
+     * @return a list of all registered devices
      */
     @GetMapping(CoreConstants.DEVICE_HEALTH_ENDPOINT)
-    public List<Device> getInactiveDevices() {
-        return deviceService.checkDevices();
+    @CrossOrigin(origins = CoreConstants.FRONTEND_URL)
+    public List<Device> getDevices() {
+        return deviceService.getDevices();
+    }
+
+    /**
+     * Get all the devices that are offline
+     * @return a list of all offline devices
+     */
+    @GetMapping(CoreConstants.DOWNED_DEVICE_ENDPOINT)
+    @CrossOrigin(origins = CoreConstants.FRONTEND_URL)
+    public Integer getNumberOfDownedDevices() {
+        return deviceService.getNumberOfDownedDevices();
     }
 }
