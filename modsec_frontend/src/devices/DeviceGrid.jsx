@@ -34,7 +34,7 @@ function DeviceGrid() {
         <div className={styles.deviceGrid} >
 
             {devices.map(device =>
-                <DeviceCard name={device.name} isOnline={device.online} isArmed={device.armed} />
+                <DeviceCard name={device.name} isOnline={device.online} isArmed={device.armed} id = {device.id} key={device.id} />
             )}
 
         </div>

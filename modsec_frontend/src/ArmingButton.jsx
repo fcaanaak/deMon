@@ -1,10 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import styles from "./ArmingButton.module.css";
 import coreConstants from "./CoreConstants";
 
 function ArmingButton() {
 
-    const [isArmed, setIsArmed] = useState(false);
+    const [isArmed, setIsArmed] = useState(sessionStorage.getItem("isArmed") === "true");
 
     function sendArmingRequest() {
         return fetch(coreConstants.ARMING_URL, {
@@ -23,6 +23,10 @@ function ArmingButton() {
             .then(respJson => setIsArmed(respJson.isArmed))
             .catch(err => alert("Arming Error: " + err));
     }
+
+    useEffect(() => {
+        sessionStorage.setItem("isArmed", isArmed.toString());
+    }, [isArmed]);
 
     return (
         <div className = {styles.center}>

@@ -50,3 +50,14 @@
     border-radius: 15px;
     padding: 10px;
 }
+
+.deleteDeviceButton {
+    background-color: white;
+    color:red;
+}
+
+.deleteDeviceButton:hover {
+    background-color: red;
+    transition: background-color 0.5s, color 0.5s;
+    color: white;
+}

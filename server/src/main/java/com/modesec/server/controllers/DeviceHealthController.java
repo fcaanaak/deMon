@@ -1,14 +1,17 @@
 package com.modesec.server.controllers;
 
 import com.modesec.server.controllers.constants.CoreConstants;
+import com.modesec.server.controllers.exceptions.ResourceNotFoundException;
 import com.modesec.server.models.Device;
 import com.modesec.server.services.DeviceServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * REST Endpoint meant to be used by clients only to
@@ -20,6 +23,7 @@ public class DeviceHealthController {
     @Autowired
     DeviceServiceImpl deviceService;
 
+    private static Logger logger = LoggerFactory.getLogger(DeviceHealthController.class);
     /**
      * Get all devices
      *
@@ -39,5 +43,20 @@ public class DeviceHealthController {
     @CrossOrigin(origins = CoreConstants.FRONTEND_URL)
     public Integer getNumberOfDownedDevices() {
         return deviceService.getNumberOfDownedDevices();
+    }
+
+    /**
+     * Remove a specific device given its UUID
+      */
+    @DeleteMapping(CoreConstants.DEVICE_HEALTH_ENDPOINT + "/{deviceId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @CrossOrigin(origins = CoreConstants.FRONTEND_URL)
+    public void deleteDeviceFromUUID(@PathVariable UUID deviceId) {
+        Device deletedDevice = deviceService.deleteDeviceFromUUID(deviceId);
+        logger.debug(String.valueOf(deviceId));
+        if (deletedDevice == null) {
+            throw new ResourceNotFoundException("Device with ID " + deviceId + " was not found");
+        }
+
     }
 }
