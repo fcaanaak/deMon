@@ -17,7 +17,8 @@
     z-index: auto;
 }
 
-.deviceCard p, h4{
+
+.deviceCardText {
     color: white;
     font-size: 1vw;
     margin-top: 0;
@@ -25,4 +26,38 @@
 
 .deviceCard div{
     text-align: center;
+}
+
+.armingTextArmed {
+    font-size: 1vw;
+    color: red;
+}
+
+.armingTextArmed span {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.armingTextDisarmed {
+
+    font-size: 1vw;
+    color: green;
+}
+
+.armingTextDisarmed span {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.deleteDeviceButton {
+    background-color: white;
+    color:red;
+}
+
+.deleteDeviceButton:hover {
+    background-color: red;
+    transition: background-color 0.5s, color 0.5s;
+    color: white;
 }

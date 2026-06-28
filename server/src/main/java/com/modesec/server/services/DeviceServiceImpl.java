@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -40,12 +42,35 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     /**
-     * Retrieve all inactive devices
+     * Retrieve all devices
      * @return a list of all device that are currently inactive
      */
     @Override
-    public List<Device> checkDevices() {
-        return deviceRepository.findByIsOnline(Boolean.FALSE);
+    public List<Device> getDevices() {
+        return deviceRepository.findAll();
+    }
+
+    /**
+     * Get the number of offline devices
+     * @return the number of offline devices
+     */
+    @Override
+    public Integer getNumberOfDownedDevices() {return deviceRepository.findByIsOnline(Boolean.FALSE).size();}
+
+    /**
+     * Delete a device from the database given its ID
+     * @param deviceId The UUID of the device (UUID4)
+     * @return The deleted device, or null if no such device was found
+     */
+    @Override
+    public Device deleteDeviceFromUUID(UUID deviceId) {
+        Device deviceToDelete = deviceRepository.findById(deviceId).orElse(null);
+
+        if (deviceToDelete != null) {
+            deviceRepository.deleteById(deviceId);
+        }
+
+        return deviceToDelete;
     }
 
     /**

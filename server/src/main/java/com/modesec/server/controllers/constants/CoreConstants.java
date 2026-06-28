@@ -6,7 +6,8 @@ public final class CoreConstants {
     public static final String ROOT_ENDPOINT = "/";
 
     public static final String REPORTS_ENDPOINT = ROOT_ENDPOINT + "reports";
-    public static final String DEVICE_HEALTH_ENDPOINT = ROOT_ENDPOINT + "device-health";
+    public static final String DEVICE_HEALTH_ENDPOINT = ROOT_ENDPOINT + "devices";
+    public static final String DOWNED_DEVICE_ENDPOINT = ROOT_ENDPOINT + "downed-devices";
     public static final String ARMING_ENDPOINT = ROOT_ENDPOINT + "arm-toggle";
 
     public static final String FRONTEND_URL = "http://localhost:5173";

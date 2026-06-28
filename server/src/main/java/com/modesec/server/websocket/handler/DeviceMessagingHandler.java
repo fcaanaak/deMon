@@ -83,7 +83,11 @@ public class DeviceMessagingHandler extends TextWebSocketHandler {
      */
     private void setDeviceOffline(Device device) {
         device.setOnline(false);
-        deviceRepository.save(device);
+
+        if (deviceRepository.existsById(device.getId())) {
+            deviceRepository.save(device);
+        }
+
     }
 
     /**
