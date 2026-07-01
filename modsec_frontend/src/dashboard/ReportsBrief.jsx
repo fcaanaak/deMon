@@ -11,7 +11,6 @@ function ReportsBrief() {
             </div>
             <ReportsList isBrief={true} />
         </div>
-
     )
 }
 

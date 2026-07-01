@@ -7,25 +7,45 @@ function ReportsFilter({reportsList, filterUpdateCallback}) {
     const [backupReport, setBackupReport] = useState([]);
     const [isFiltering, setIsFiltering] = useState(false);
 
-    function handleNameQueryChange(e) {
-        const filterVal = e.target.value;
-        setNameQuery(filterVal);
+    function isFilterValEmpty(filterValue) {
+        return filterValue === "" || filterValue === null;
+    }
 
-        // Can refactor this into another function later
-        if (filterVal === "") {
-            filterUpdateCallback(backupReport);
-            setIsFiltering(false);
+    function resetFilter() {
+        filterUpdateCallback(backupReport);
+        setIsFiltering(false);
+    }
+
+    function filterInit() {
+        setBackupReport(reportsList);
+        setIsFiltering(true);
+    }
+
+
+    function handleNewFilterVal(filterVal) {
+
+        if (isFilterValEmpty(filterVal)) {
+            resetFilter();
         } else {
 
             if (!isFiltering) {
-                setBackupReport(reportsList);
-                setIsFiltering(true);
+                filterInit();
             }
 
             filterUpdateCallback(backupReport.filter(report => report.deviceName.startsWith(filterVal)));
         }
 
+    }
 
+    /**
+     * A function to be called when we enter text into the filter text entry
+     * @param e
+     */
+    function handleNameQueryChange(e) {
+        const filterVal = e.target.value;
+        setNameQuery(filterVal);
+
+        handleNewFilterVal(filterVal);
     }
 
     return (

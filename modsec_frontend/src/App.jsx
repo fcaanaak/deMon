@@ -16,7 +16,6 @@ function App() {
               <Route path= {"/reports"} element={<ReportsPage />} />
               <Route path={"/devices"} element={<DevicesPage />} />
           </Routes>
-
       </BrowserRouter>
   );
 }

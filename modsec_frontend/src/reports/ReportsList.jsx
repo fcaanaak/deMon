@@ -3,29 +3,22 @@ import ReportsFilter from "./ReportsFilter.jsx";
 import ReportCard from "./ReportCard.jsx";
 import {useEffect, useRef, useState} from "react";
 import coreConstants from "../CoreConstants.jsx";
+import useFetch from "../hooks/useFetch.jsx";
 
 function ReportsList({isBrief}) {
 
     const wsRef = useRef(null);
     const [reports, setReports] = useState([]);
 
-    /**
-     * Fetch all the reports from the server
-     */
-    function getReports() {
-        fetch(coreConstants.ALL_REPORTS_URL)
-            .then((response) => response.json())
-            .then(respJson => {
-                setReports(respJson);
-            })
-            .catch((error) => alert(error));
-    }
+    const errorMessage = "Error fetching reports";
+    const numReportsInBrief = 4;
 
     /**
      * Set up the callbacks used by the websocket client
      * @param socket An already created websocket
      */
     function setupWsCallbacks(socket) {
+
         socket.onmessage = (event) => {
             const newReport = JSON.parse(event.data);
             setReports(prevState => [newReport, ...prevState]);
@@ -34,6 +27,7 @@ function ReportsList({isBrief}) {
         socket.onerror = (err) => {
             alert("Websocket Error: " + err);
         }
+
     }
 
     function wsInit() {
@@ -47,21 +41,16 @@ function ReportsList({isBrief}) {
         }
     }
 
-    useEffect(() => {
-        getReports();
-        return wsInit();
-    }, []);
-
     function handleFilterUpdate(filterData) {
         setReports(filterData);
     }
 
     function renderReports() {
-        const reportsPreviewNum = 4;
+
         let renderedReportsList = reports;
 
         if (isBrief) {
-            renderedReportsList = reports.slice(0, reportsPreviewNum);
+            renderedReportsList = reports.slice(0, numReportsInBrief);
         }
 
         return (
@@ -71,7 +60,14 @@ function ReportsList({isBrief}) {
                 )}
             </ul>
         )
+
     }
+
+    useEffect(() => {
+        return wsInit();
+    }, []);
+
+    useFetch(coreConstants.ALL_REPORTS_URL, setReports, errorMessage);
 
     return (
         <div>
