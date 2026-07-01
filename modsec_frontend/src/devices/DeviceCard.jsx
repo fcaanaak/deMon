@@ -13,7 +13,6 @@ function DeviceCard({name, isOnline, isArmed, id}) {
         ).catch(
             (error) => {alert(`Error deleting device with id ${deviceId}: ${error.message}`)}
         )
-
     }
 
     return (

@@ -1,27 +1,21 @@
 import DevicesBrief from "./DevicesBrief.jsx";
 import ReportsBrief from "./ReportsBrief.jsx";
 import coreConstants from "../CoreConstants.jsx";
-import {useEffect, useState} from "react";
+import {useState} from "react";
+import useFetch from "../hooks/useFetch.jsx";
+import useFetchPolling from "../hooks/useFetchPolling.jsx";
 
 function DashboardPage() {
     const [downedDevices, setDownedDevices] = useState(0);
 
-    function getDownedDevices() {
-        fetch(coreConstants.DOWNED_DEVICES_URL)
-            .then((response) => response.json())
-            .then(respJson => {
-                setDownedDevices(respJson);
-            })
-            .catch((error) => alert(error));
-    }
+    const downedDeviceFetchDelayMillis = 5000;
+    const errorMessage = "Error fetching downed devices";
 
-    useEffect(() => {
-        getDownedDevices();
-    }, []);
+    useFetch(coreConstants.DOWNED_DEVICES_URL, setDownedDevices, errorMessage);
 
-    useEffect(() => {
-        setTimeout(getDownedDevices, 5000);
-    }, [downedDevices]);
+    useFetchPolling(coreConstants.DOWNED_DEVICES_URL, setDownedDevices,
+        downedDevices, errorMessage,
+        downedDeviceFetchDelayMillis);
 
     return (
         <div>

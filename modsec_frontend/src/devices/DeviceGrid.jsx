@@ -1,42 +1,25 @@
 import styles from './stylesheets/DeviceGrid.module.css';
 import DeviceCard from "./DeviceCard.jsx";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import coreConstants from "../CoreConstants.jsx";
+import useFetch from "../hooks/useFetch.jsx";
+import useFetchPolling from "../hooks/useFetchPolling.jsx";
 
 function DeviceGrid() {
 
     const [devices, setDevices] = useState([]);
-    const deviceFetchInterval = 1000 * 10;
 
-    /**
-     * Fetch all the devices from the server
-     */
-    function getDevices() {
-        fetch(coreConstants.DEVICES_URL)
-            .then((response) => response.json())
-            .then(respJson => {
-                setDevices(respJson);
-            })
-            .catch((error) => alert(error));
-    }
+    const errorMessage = "Error fetching devices";
+    const deviceFetchDelayMillis = 5000;
 
-    // Get all devices once upon loading
-    useEffect(() => {
-        getDevices();
-    },[]);
-
-
-    useEffect(() => {
-        setTimeout(getDevices, deviceFetchInterval);
-    },[devices]);
+    useFetch(coreConstants.DEVICES_URL, setDevices, errorMessage);
+    useFetchPolling(coreConstants.DEVICES_URL, setDevices, devices, errorMessage, deviceFetchDelayMillis);
 
     return (
-        <div className={styles.deviceGrid} >
-
+        <div className={styles.deviceGrid}>
             {devices.map(device =>
                 <DeviceCard name={device.name} isOnline={device.online} isArmed={device.armed} id = {device.id} key={device.id} />
             )}
-
         </div>
     )
 }
