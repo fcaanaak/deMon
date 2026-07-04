@@ -28,8 +28,7 @@ class WiFiProvManager{
   // Setup Provisioning button
   void setupProvButton();
 
-
-  // - Setup callbacks
+  // Setup callbacks
   void setupCallbacks();
   void setupProvCallback();
   void setupSuccessCallback();

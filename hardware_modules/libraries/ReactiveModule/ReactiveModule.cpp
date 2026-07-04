@@ -54,14 +54,7 @@ String ReactiveModule::generateJSONReport(char* name){
   JsonDocument doc;
 
   doc["deviceName"] = name;
-  
-  doc["year"] = dateTime.getYear();
-  doc["month"] = dateTime.getMonth();
-  doc["day"] = dateTime.getDay();
-  doc["hour"] = dateTime.getHour();
-  doc["minute"] = dateTime.getMinute();
-  doc["second"] = dateTime.getSecond();
-
+  doc["detectionDateTime"] = dateTime.getDateTime();
 
   serializeJson(doc,output);
 
@@ -79,11 +72,9 @@ void ReactiveModule::mainloop(){
       
       dateTime.loadDateTime();
       
-      String report = generateJSONReport("name");
+      String report = generateJSONReport("placeholder-name");
       
-      httpClient.startReportsConnection();
-      httpClient.sendPost(report);
-      httpClient.endConnection();
+      httpClient.sendReport(report);
       
       inactivityCounter = 0;
       
