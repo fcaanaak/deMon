@@ -7,21 +7,16 @@ void DateTimeManager::loadDateTime(){
 
   if (!getLocalTime(&timeinfo)){
     dateTimeFetchFailed = true;
-      
   } else{
 
     if (dateTimeFetchFailed){ dateTimeFetchFailed = false; }
-    
-    year = formatDateFieldToUInt(yearFormatter, yearMaxStringLength,&timeinfo);
-    month = formatDateFieldToUInt(monthFormatter, nonYearMaxStringLength,&timeinfo);
-    day = formatDateFieldToUInt(dayFormatter, nonYearMaxStringLength,&timeinfo);
-    hour = formatDateFieldToUInt(hourFormatter, nonYearMaxStringLength,&timeinfo);
-    minute = formatDateFieldToUInt(minuteFormatter, nonYearMaxStringLength,&timeinfo);
-    second = formatDateFieldToUInt(secondFormatter, nonYearMaxStringLength,&timeinfo);
+
+    processDateTime(&timeinfo);
     
   }
   
 }
+
 
 void DateTimeManager::setup(){
 
@@ -33,21 +28,20 @@ void DateTimeManager::setup(){
 
 }
 
-unsigned int DateTimeManager::formatDateFieldToUInt(const char* formatter, unsigned int maxLength, struct tm* timeInfo){
-
-  char temp[maxLength];
-
-  strftime(temp,maxLength,formatter,timeInfo);
-
-  return atoi(temp);
-
-}
-
-unsigned int DateTimeManager::getYear(){ return year; }
-unsigned int DateTimeManager::getMonth(){ return month; }
-unsigned int DateTimeManager::getDay(){ return day; }
-unsigned int DateTimeManager::getHour(){ return hour; }
-unsigned int DateTimeManager::getMinute(){ return minute; }
-unsigned int DateTimeManager::getSecond(){ return second; }
 
 bool DateTimeManager::checkFailure(){ return dateTimeFetchFailed;  }
+
+
+void DateTimeManager::processDateTime(struct tm* timeInfo){
+
+    char temp[dateTimeStringLength];
+
+    strftime(temp, dateTimeStringLength, templateDateTimeString ,timeInfo);
+
+    dateTime = String(temp);
+}
+
+
+String DateTimeManager::getDateTime(){
+    return dateTime;
+}

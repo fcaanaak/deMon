@@ -7,13 +7,14 @@
 #include "WiFiProvManager.h"
 #include "DateTimeManager.h"
 #include <ArduinoJson.h>
-#include "HttpClientManager.h"
+#include "HTTPClientManager.h"
 
 #define HOUR_LENGTH 3
 #define MINUTE_LENGTH 3
 #define SECOND_LENGTH 3
 #define DAY_LENGTH 3
 #define WEEKDAY_LENGTH 10
+
 
 class ReactiveModule{
 
@@ -23,7 +24,7 @@ protected:
   
   /**Wi-Fi related fields **/
   WiFiManager wifi;
-  HttpClientManager httpClient;
+  HTTPClientManager httpClient;
   
   enum State{
     NETWORK_RECOVERY,
@@ -38,9 +39,8 @@ protected:
   volatile State currentState = UNDECIDED;
   
   const unsigned short autoReconnectSeconds = 10;
+
   // Class methods
-  // WiFi connection methods
-  // Abstract (virtual methods for child classes)
 
   // Timing related fields
   unsigned long intervalMillis = 200;

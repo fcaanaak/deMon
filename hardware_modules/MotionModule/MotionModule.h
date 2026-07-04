@@ -1,21 +1,6 @@
 #ifndef MOTION_MODULE_H
 #define MOTION_MODULE_H
 #include <ReactiveModule.h>
-/*
-
-  TODO: 
-  Replace the project structure like so,
-
-  hardware_modules:
-  |
-  |__ Managers
-
-  And move ReactiveModule and MotionModule to the hardware_modules
-  folder.
-
-  Then, move all the other Manager files like WiFi and LED into the Managers
-  folder
- */
 
 class MotionModule : public ReactiveModule {
 
