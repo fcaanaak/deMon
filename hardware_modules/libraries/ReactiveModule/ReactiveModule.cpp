@@ -1,12 +1,5 @@
 #include "ReactiveModule.h"
 
-#define READ true
-#define READ_WRITE false
-#define DEFAULT_CONNECTION_CHECK_TIME 5000
-#define MILLIS_TO_SECONDS 1000
-
-#define DATE_STRING_LENGTH 37
-
 
 void ReactiveModule::setThreshold(float newThreshold){
   
@@ -14,11 +7,13 @@ void ReactiveModule::setThreshold(float newThreshold){
 
 }
 
+
 void ReactiveModule::setIntervalMillis(unsigned long newInterval){
 
-  intervalMillis = newInterval;
+  detectionIntervalMillis = newInterval;
 
 }
+
 
 void ReactiveModule::setup(){
 
@@ -30,12 +25,11 @@ void ReactiveModule::setup(){
 }
 
 
-bool ReactiveModule::checkTimer(unsigned long detectTimeMillis){
+bool ReactiveModule::runTimerInterval(unsigned long detectTimeMillis){
   
   if (!timerRunning){
     cycleStartTime = millis();
     timerRunning = true;
-    
   }
 
   if (millis() >= (cycleStartTime + detectTimeMillis)){
@@ -47,6 +41,12 @@ bool ReactiveModule::checkTimer(unsigned long detectTimeMillis){
   
 }
 
+
+/**
+ * @brief Create a JSON document encoded as a string to represent a report
+ * @param name: The name of the device to show in the report
+ * @return The string representing a JSON document
+ */
 String ReactiveModule::generateJSONReport(char* name){
 
   char output[256];
@@ -61,10 +61,10 @@ String ReactiveModule::generateJSONReport(char* name){
   return String(output);
 }
 
-void ReactiveModule::mainloop(){
-  
 
-  if (checkTimer(intervalMillis) && WiFi.status() == WL_CONNECTED){
+void ReactiveModule::mainloop(){
+
+  if (checkTimer(detectionIntervalMillis) && WiFi.status() == WL_CONNECTED){
     
     if (detectExternalEvent()){
       
@@ -76,12 +76,9 @@ void ReactiveModule::mainloop(){
       
       httpClient.sendReport(report);
       
-      inactivityCounter = 0;
-      
     } else {
       
       LEDManager::disableLED();
-      inactivityCounter++;
       
     }
     

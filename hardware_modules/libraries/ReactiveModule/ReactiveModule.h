@@ -9,61 +9,38 @@
 #include <ArduinoJson.h>
 #include "HTTPClientManager.h"
 
-#define HOUR_LENGTH 3
-#define MINUTE_LENGTH 3
-#define SECOND_LENGTH 3
-#define DAY_LENGTH 3
-#define WEEKDAY_LENGTH 10
-
-
 class ReactiveModule{
 
 protected:
 
-  /* Class fields */
+    // Fields
+    WiFiManager wifi;
+    HTTPClientManager httpClient;
+    DateTimeManager dateTime;
   
-  /**Wi-Fi related fields **/
-  WiFiManager wifi;
-  HTTPClientManager httpClient;
-  
-  enum State{
-    NETWORK_RECOVERY,
-    MANUAL_SETUP,
-    BORED,
-    DETECTING,
-    UNDECIDED
-  };
+    const unsigned short autoReconnectSeconds = 10;
 
-  
-  unsigned short inactivityCounter = 0;
-  volatile State currentState = UNDECIDED;
-  
-  const unsigned short autoReconnectSeconds = 10;
+    unsigned long detectionIntervalMillis = 200;
+    bool timerRunning = false;
+    unsigned long cycleStartTime = 0;
 
-  // Class methods
-
-  // Timing related fields
-  unsigned long intervalMillis = 200;
-  bool timerRunning = false;
-  unsigned long cycleStartTime = 0;
+    float threshold;
+    
+    // Methods
+    bool runTimerInterval(unsigned long detectTimeMillis);
   
-  bool checkTimer(unsigned long detectTimeMillis);
+    virtual bool detectExternalEvent() = 0;
   
-  virtual bool detectExternalEvent() = 0;
-  float threshold;
-  
-  String generateJSONReport(char* name);
-  void sendReport();
-
-  DateTimeManager dateTime;
-
+    String generateJSONReport(char* name);
+    void sendReport();
+    
   
 public:
   
-  virtual void setup();
-  void setThreshold(float newThreshold);
-  void setIntervalMillis(unsigned long newInterval);
-  void mainloop();
+    virtual void setup();
+    void setThreshold(float newThreshold);
+    void setDetectionIntervalMillis(unsigned long newInterval);
+    void mainloop();
 
 };
 

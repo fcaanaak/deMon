@@ -26,6 +26,11 @@ void WiFiProvManager::setupProvConfig(){
 }
 
 
+/**
+ *
+ * @brief Setup the callback to run when we successfully provision
+ *
+ */
 void WiFiProvManager::setupSuccessCallback(){
 
   provisioner.onSuccess( [this](const char* ssid, const char* password, const char* input) {
@@ -40,6 +45,12 @@ void WiFiProvManager::setupSuccessCallback(){
 
 }
 
+/**
+ *
+ * @brief Setup the callback that validates the user input
+ * in the provisioning landing page
+ *
+ */
 void WiFiProvManager::setupInputCheckCallback(){
   
   provisioner.onInputCheck( [this](const char* input) -> bool {
@@ -54,11 +65,17 @@ void WiFiProvManager::setupInputCheckCallback(){
 
 }
 
+/**
+ *
+ * @brief Setup the callback that runs once the provisioning page is opened
+ *
+ */
 void WiFiProvManager::setupProvCallback(){
   provisioner.onProvision( [this]() {
     isProvisioning = true;
   });
 }
+
 
 void WiFiProvManager::setupCallbacks(){
 
@@ -70,9 +87,11 @@ void WiFiProvManager::setupCallbacks(){
 
 void WiFiProvManager::setupProvButton(){
   pinMode(provButtonPin,INPUT_PULLUP);
+  
   attachInterrupt(digitalPinToInterrupt(provButtonPin),std::bind(&WiFiProvManager::activateProvisioningFlag,this), FALLING);
 
 }
+
 
 void WiFiProvManager::setup(){
 
@@ -82,13 +101,16 @@ void WiFiProvManager::setup(){
   
 }
 
+
 void WiFiProvManager::activateProvisioning(){
   provisioner.startProvisioning();
 }
 
+
 void WiFiProvManager::activateProvisioningFlag(){
   provisionOnNextCheck = true;
 }
+
 
 void WiFiProvManager::provisionIfFlagSet(){
 
@@ -99,8 +121,8 @@ void WiFiProvManager::provisionIfFlagSet(){
 
 }
 
-bool WiFiProvManager::checkIfProvisioning(){
 
+bool WiFiProvManager::checkIfProvisioning(){
   return isProvisioning;
 }
 

@@ -6,42 +6,40 @@
 #include "LEDManager.h"
 #include "WiFiProvManager.h"
 
-enum State{
-  CONNECTED,
-  DISCONNECTED
-};
-
 class WiFiManager{
 
- private:
+private:
 
-  static const unsigned short autoReconnectSeconds = 10;
+    // Fields
+    static const unsigned short autoReconnectSeconds = 10;
 
-  PrefManager pref;
-  WiFiProvManager wifiProv;
+    PrefManager pref;
+    WiFiProvManager wifiProv;
 
-  static bool connectToWiFi(const char* ssid, const char* password, unsigned int waitSecs);
-  static bool reconnectToWiFi(unsigned int waitSecs);
-  static bool waitForConnection(unsigned int waitSecs);
-  static bool reconnectWithRetries(unsigned int retries, unsigned int waitSecs); 
+    // Methods
+    static bool connectToWiFi(const char* ssid, const char* password, unsigned int waitSecs);
+    
+    static bool reconnectToWiFi(unsigned int waitSecs);
+    static bool reconnectWithRetries(unsigned int retries, unsigned int waitSecs);
 
-  String scanStoredNetworks();
-  bool autoReconnect();
+    bool autoReconnect();
+    
+    static bool waitForConnection(unsigned int waitSecs);
+
+    String scanStoredNetworks();
   
-  void registerWiFiEvents();
-  void registerWiFiConnected();
-  void registerWiFiDisconnected();
-  void resetToSTA();
+    void registerWiFiEvents();
+    void registerWiFiConnected();
+    void registerWiFiDisconnected();
 
+    void resetToSTA();
 
-  static void onWiFiReconnect(WiFiEvent_t event, WiFiEventInfo_t info);
-  static void onWiFiDisconnect(WiFiEvent_t event, WiFiEventInfo_t info);
-
-  static State state;
+    static void onWiFiReconnect(WiFiEvent_t event, WiFiEventInfo_t info);
+    static void onWiFiDisconnect(WiFiEvent_t event, WiFiEventInfo_t info);
 
 public:
   
-  void setup();
+    void setup();
   
 };
 

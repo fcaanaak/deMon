@@ -8,42 +8,43 @@
 
 class WiFiProvManager{
 
- private:
+private:
 
-  // Fields
-  WiFiProvisioner provisioner;
-  PrefManager pref;
-  const unsigned int provButtonPin = 0;
-  static inline bool isProvisioning = false;
-  bool provisionOnNextCheck = false;
+    // Fields
+    WiFiProvisioner provisioner;
+    PrefManager pref;
+    
+    const unsigned int provButtonPin = 0;
+    static inline bool isProvisioning = false;
+    bool provisionOnNextCheck = false;
 
-  MatchState matcher;
-  const char* ipPattern = "([0-9]{1,3}.){3}([0-9]{1,3})";
+    MatchState matcher;
+    const char* ipPattern = "([0-9]{1,3}.){3}([0-9]{1,3})";
   
-  // Methods
+    // Methods
 
-  // Setup WiFiProvisioner config
-  void setupProvConfig();
+    // Setup WiFiProvisioner config
+    void setupProvConfig();
 
-  // Setup Provisioning button
-  void setupProvButton();
+    // Setup Provisioning button
+    void setupProvButton();
 
-  // Setup callbacks
-  void setupCallbacks();
-  void setupProvCallback();
-  void setupSuccessCallback();
-  void setupInputCheckCallback();
+    // Setup callbacks
+    void setupCallbacks();
+    void setupProvCallback();
+    void setupSuccessCallback();
+    void setupInputCheckCallback();
 
-  void activateProvisioningFlag();
+    // Activation Functions
+    void activateProvisioningFlag();
+    void activateProvisioning();
   
-  void activateProvisioning();
-  
- public:
+public:
 
-  void setup();
+    void setup();
   
-  static bool checkIfProvisioning();
-  void provisionIfFlagSet();
+    static bool checkIfProvisioning();
+    void provisionIfFlagSet();
  
 };
 
